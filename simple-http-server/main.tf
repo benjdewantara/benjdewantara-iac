@@ -37,6 +37,10 @@ output "main_vpc_id" {
 
 resource "aws_internet_gateway" "main_igw" {
   vpc_id = aws_vpc.main_vpc.id
+
+  tags = {
+    "Name" = "SimpleHTTPServerIgw"
+  }
 }
 
 output "main_igw_id" {
@@ -66,9 +70,36 @@ resource "aws_subnet" "main_subnet" {
   }
 }
 
+# resource "aws_route_table_association" "main_rtb_sub_assoc" {
+#   subnet_id      = aws_subnet.main_subnet.id
+#   route_table_id = aws_route_table.main_rtb.id
+# }
+
+resource "aws_main_route_table_association" "main_rtb_assoc" {
+  route_table_id = aws_route_table.main_rtb.id
+  vpc_id         = aws_vpc.main_vpc.id
+}
+
 resource "aws_security_group" "main_secgroup" {
   vpc_id = aws_vpc.main_vpc.id
   name   = "simpleHttpServerSg"
+  egress {
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    description      = "Allow outgoing packets"
+    from_port        = 0
+    protocol         = "-1"
+    to_port          = 0
+  }
+
+  ingress {
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    description      = "Allow incoming packets"
+    from_port        = 0
+    protocol         = "-1"
+    to_port          = 0
+  }
 }
 
 output "main_secgroup_id" {
@@ -77,11 +108,21 @@ output "main_secgroup_id" {
 
 }
 
+# resource "aws_key_pair" "main_key_pair" {
+#   key_name   = "simpleHttpServerKeyPair"
+#   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDfZTiZX3TKlAfnpr"
+#   lifecycle {
+# prevent_destroy = true
+#   }
+# }
+
 resource "aws_instance" "main_ec2_instance" {
-  ami                    = "ami-02f26adf094f51167"
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.main_secgroup.id]
-  subnet_id              = aws_subnet.main_subnet.id
+  ami                         = "ami-02f26adf094f51167"
+  instance_type               = "t2.micro"
+  vpc_security_group_ids      = [aws_security_group.main_secgroup.id]
+  subnet_id                   = aws_subnet.main_subnet.id
+  key_name                    = "simpleHttpServerKeyPair"
+  associate_public_ip_address = true
 
   tags = {
     Name = "SimpleHTTPServer"
