@@ -65,6 +65,7 @@ resource "aws_route_table" "main_rtb" {
 resource "aws_subnet" "main_subnet" {
   cidr_block = aws_vpc.main_vpc.cidr_block
   vpc_id     = aws_vpc.main_vpc.id
+  map_public_ip_on_launch = true
   tags = {
     "Name" = "simpleHttpServerSubnet"
   }
