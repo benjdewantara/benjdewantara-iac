@@ -117,7 +117,7 @@ output "main_secgroup_id" {
 # }
 
 resource "aws_instance" "main_ec2_instance" {
-  ami                         = "ami-02f26adf094f51167"
+  ami                         = "ami-0d058fe428540cd89" # Ubuntu Server 20.04 LTS (HVM), SSD Volume Type
   instance_type               = "t2.micro"
   vpc_security_group_ids      = [aws_security_group.main_secgroup.id]
   subnet_id                   = aws_subnet.main_subnet.id
