@@ -58,3 +58,21 @@ resource "aws_s3_bucket_inventory" "invtry_parquet" {
     }
   }
 }
+
+resource "aws_s3_bucket_inventory" "invtry_csv" {
+  bucket = aws_s3_bucket.bucket_w_invtry.id
+  name   = "EntireBucketDailyCSV"
+
+  included_object_versions = "All"
+
+  schedule {
+    frequency = "Daily"
+  }
+
+  destination {
+    bucket {
+      format     = "CSV"
+      bucket_arn = aws_s3_bucket.bucket_w_invtry_output.arn
+    }
+  }
+}
