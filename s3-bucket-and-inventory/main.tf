@@ -29,6 +29,10 @@ resource "aws_s3_bucket_inventory" "invtry_orc" {
 
   included_object_versions = "All"
 
+  optional_fields = [
+    "Size", "LastModifiedDate", "StorageClass"
+  ]
+
   schedule {
     frequency = "Daily"
   }
@@ -47,6 +51,10 @@ resource "aws_s3_bucket_inventory" "invtry_parquet" {
 
   included_object_versions = "All"
 
+  optional_fields = [
+    "Size", "LastModifiedDate", "StorageClass"
+  ]
+
   schedule {
     frequency = "Daily"
   }
@@ -64,6 +72,10 @@ resource "aws_s3_bucket_inventory" "invtry_csv" {
   name   = "EntireBucketDailyCSV"
 
   included_object_versions = "All"
+
+  optional_fields = [
+    "Size", "LastModifiedDate", "StorageClass"
+  ]
 
   schedule {
     frequency = "Daily"
