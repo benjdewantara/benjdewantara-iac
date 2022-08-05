@@ -160,12 +160,55 @@ resource "aws_security_group" "secgroup_horbo_web" {
   }
 }
 
+resource "aws_iam_role" "iamrole_horbo_web" {
+  name = "iamrole_horbo_web"
+
+  inline_policy {
+    name = "iampolicy_inline_iamrole_horbo_web"
+    policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "VisualEditor0",
+          "Effect" : "Allow",
+          "Action" : "s3:*",
+          "Resource" : "*"
+        }
+      ]
+    })
+  }
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Principal" : {
+          "Service" : [
+            "ec2.amazonaws.com"
+          ]
+        }
+      }
+    ]
+  })
+
+}
+
+resource "aws_iam_instance_profile" "iaminstanceprofile_horbo_web" {
+  name = "iaminstanceprofile_horbo_web"
+  role = aws_iam_role.iamrole_horbo_web.name
+}
+
 resource "aws_instance" "ec2_instance_horbo_web" {
   ami                         = data.aws_ami.amazon-linux-2.image_id
   instance_type               = "t2.micro"
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.subnet_aza_horbo_web.id
   security_groups             = [aws_security_group.secgroup_horbo_web.id]
+  iam_instance_profile        = aws_iam_instance_profile.iaminstanceprofile_horbo_web.name
 
 
   tags = {
