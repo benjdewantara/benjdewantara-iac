@@ -136,10 +136,10 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
-resource "aws_security_group" "secgroup_benj_web" {
+resource "aws_security_group" "benj_web" {
   vpc_id      = aws_vpc.benj.id
-  name        = "secgroup_benj_web"
-  description = "This is security group secgroup_benj_web"
+  name        = "benj_web"
+  description = "This is security group benj_web"
 
   egress {
     cidr_blocks      = ["0.0.0.0/0"]
@@ -160,8 +160,8 @@ resource "aws_security_group" "secgroup_benj_web" {
   }
 }
 
-resource "aws_iam_role" "iamrole_benj_web" {
-  name = "iamrole_benj_web"
+resource "aws_iam_role" "benj_web" {
+  name = "benj_web"
 
   inline_policy {
     name = "iampolicy_inline_iamrole_benj_web"
@@ -197,9 +197,9 @@ resource "aws_iam_role" "iamrole_benj_web" {
 
 }
 
-resource "aws_iam_instance_profile" "iaminstanceprofile_benj_web" {
-  name = "iaminstanceprofile_benj_web"
-  role = aws_iam_role.iamrole_benj_web.name
+resource "aws_iam_instance_profile" "benj_web" {
+  name = "benj_web"
+  role = aws_iam_role.benj_web.name
 }
 
 resource "aws_instance" "ec2_instance_benj_web" {
@@ -207,8 +207,8 @@ resource "aws_instance" "ec2_instance_benj_web" {
   instance_type               = "t2.micro"
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.aza_benj_web.id
-  security_groups             = [aws_security_group.secgroup_benj_web.id]
-  iam_instance_profile        = aws_iam_instance_profile.iaminstanceprofile_benj_web.name
+  security_groups             = [aws_security_group.benj_web.id]
+  iam_instance_profile        = aws_iam_instance_profile.benj_web.name
 
 
   tags = {
