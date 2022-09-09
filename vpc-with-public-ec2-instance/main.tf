@@ -12,7 +12,7 @@ resource "aws_vpc" "vpc_benj" {
   }
 }
 
-resource "aws_subnet" "subnet_aza_benj_apps" {
+resource "aws_subnet" "aza_benj_apps" {
   vpc_id            = aws_vpc.vpc_benj.id
   cidr_block        = "122.110.0.0/19"
   availability_zone = "us-east-1a"
@@ -22,7 +22,7 @@ resource "aws_subnet" "subnet_aza_benj_apps" {
   }
 }
 
-resource "aws_subnet" "subnet_aza_benj_web" {
+resource "aws_subnet" "aza_benj_web" {
   vpc_id                  = aws_vpc.vpc_benj.id
   cidr_block              = "122.110.32.0/19"
   availability_zone       = "us-east-1a"
@@ -33,7 +33,7 @@ resource "aws_subnet" "subnet_aza_benj_web" {
   }
 }
 
-resource "aws_subnet" "subnet_azb_benj_apps" {
+resource "aws_subnet" "azb_benj_apps" {
   vpc_id            = aws_vpc.vpc_benj.id
   cidr_block        = "122.110.64.0/19"
   availability_zone = "us-east-1b"
@@ -43,7 +43,7 @@ resource "aws_subnet" "subnet_azb_benj_apps" {
   }
 }
 
-resource "aws_subnet" "subnet_azb_benj_web" {
+resource "aws_subnet" "azb_benj_web" {
   vpc_id                  = aws_vpc.vpc_benj.id
   cidr_block              = "122.110.96.0/19"
   availability_zone       = "us-east-1b"
@@ -54,7 +54,7 @@ resource "aws_subnet" "subnet_azb_benj_web" {
   }
 }
 
-resource "aws_subnet" "subnet_azc_benj_apps" {
+resource "aws_subnet" "azc_benj_apps" {
   vpc_id            = aws_vpc.vpc_benj.id
   cidr_block        = "122.110.128.0/19"
   availability_zone = "us-east-1c"
@@ -64,7 +64,7 @@ resource "aws_subnet" "subnet_azc_benj_apps" {
   }
 }
 
-resource "aws_subnet" "subnet_azc_benj_web" {
+resource "aws_subnet" "azc_benj_web" {
   vpc_id                  = aws_vpc.vpc_benj.id
   cidr_block              = "122.110.160.0/19"
   availability_zone       = "us-east-1c"
@@ -97,22 +97,22 @@ resource "aws_route_table" "rtb_benj" {
 }
 
 resource "aws_route_table_association" "rtb_assoc_benj_web_1" {
-  subnet_id      = aws_subnet.subnet_aza_benj_web.id
+  subnet_id      = aws_subnet.aza_benj_web.id
   route_table_id = aws_route_table.rtb_benj.id
 }
 
 resource "aws_route_table_association" "rtb_assoc_benj_web_2" {
-  subnet_id      = aws_subnet.subnet_azb_benj_web.id
+  subnet_id      = aws_subnet.azb_benj_web.id
   route_table_id = aws_route_table.rtb_benj.id
 }
 
 resource "aws_route_table_association" "rtb_assoc_benj_web_3" {
-  subnet_id      = aws_subnet.subnet_azc_benj_web.id
+  subnet_id      = aws_subnet.azc_benj_web.id
   route_table_id = aws_route_table.rtb_benj.id
 }
 
 # resource "aws_route_table_association" "rtb_assoc_benj_apps_1" {
-# subnet_id      = aws_subnet.subnet_aza_benj_apps.id
+# subnet_id      = aws_subnet.aza_benj_apps.id
 # route_table_id = aws_route_table.rtb_benj.id
 # }
 
@@ -206,7 +206,7 @@ resource "aws_instance" "ec2_instance_benj_web" {
   ami                         = data.aws_ami.amazon-linux-2.image_id
   instance_type               = "t2.micro"
   associate_public_ip_address = true
-  subnet_id                   = aws_subnet.subnet_aza_benj_web.id
+  subnet_id                   = aws_subnet.aza_benj_web.id
   security_groups             = [aws_security_group.secgroup_benj_web.id]
   iam_instance_profile        = aws_iam_instance_profile.iaminstanceprofile_benj_web.name
 
