@@ -3,7 +3,7 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-resource "aws_vpc" "vpc_benj" {
+resource "aws_vpc" "benj" {
   cidr_block       = "122.110.0.0/16"
   instance_tenancy = "default"
 
@@ -13,7 +13,7 @@ resource "aws_vpc" "vpc_benj" {
 }
 
 resource "aws_subnet" "aza_benj_apps" {
-  vpc_id            = aws_vpc.vpc_benj.id
+  vpc_id            = aws_vpc.benj.id
   cidr_block        = "122.110.0.0/19"
   availability_zone = "us-east-1a"
 
@@ -23,7 +23,7 @@ resource "aws_subnet" "aza_benj_apps" {
 }
 
 resource "aws_subnet" "aza_benj_web" {
-  vpc_id                  = aws_vpc.vpc_benj.id
+  vpc_id                  = aws_vpc.benj.id
   cidr_block              = "122.110.32.0/19"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
@@ -34,7 +34,7 @@ resource "aws_subnet" "aza_benj_web" {
 }
 
 resource "aws_subnet" "azb_benj_apps" {
-  vpc_id            = aws_vpc.vpc_benj.id
+  vpc_id            = aws_vpc.benj.id
   cidr_block        = "122.110.64.0/19"
   availability_zone = "us-east-1b"
 
@@ -44,7 +44,7 @@ resource "aws_subnet" "azb_benj_apps" {
 }
 
 resource "aws_subnet" "azb_benj_web" {
-  vpc_id                  = aws_vpc.vpc_benj.id
+  vpc_id                  = aws_vpc.benj.id
   cidr_block              = "122.110.96.0/19"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
@@ -55,7 +55,7 @@ resource "aws_subnet" "azb_benj_web" {
 }
 
 resource "aws_subnet" "azc_benj_apps" {
-  vpc_id            = aws_vpc.vpc_benj.id
+  vpc_id            = aws_vpc.benj.id
   cidr_block        = "122.110.128.0/19"
   availability_zone = "us-east-1c"
 
@@ -65,7 +65,7 @@ resource "aws_subnet" "azc_benj_apps" {
 }
 
 resource "aws_subnet" "azc_benj_web" {
-  vpc_id                  = aws_vpc.vpc_benj.id
+  vpc_id                  = aws_vpc.benj.id
   cidr_block              = "122.110.160.0/19"
   availability_zone       = "us-east-1c"
   map_public_ip_on_launch = true
@@ -76,7 +76,7 @@ resource "aws_subnet" "azc_benj_web" {
 }
 
 resource "aws_internet_gateway" "igw_benj" {
-  vpc_id = aws_vpc.vpc_benj.id
+  vpc_id = aws_vpc.benj.id
 
   tags = {
     Name = "igw-benj"
@@ -84,7 +84,7 @@ resource "aws_internet_gateway" "igw_benj" {
 }
 
 resource "aws_route_table" "rtb_benj" {
-  vpc_id = aws_vpc.vpc_benj.id
+  vpc_id = aws_vpc.benj.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -137,7 +137,7 @@ data "aws_ami" "amazon-linux-2" {
 }
 
 resource "aws_security_group" "secgroup_benj_web" {
-  vpc_id      = aws_vpc.vpc_benj.id
+  vpc_id      = aws_vpc.benj.id
   name        = "secgroup_benj_web"
   description = "This is security group secgroup_benj_web"
 
