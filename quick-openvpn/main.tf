@@ -6,7 +6,7 @@ provider "aws" {
 data "aws_region" "current" {}
 
 locals {
-  quickname = "quickopenvpn"
+  quickname = "openvpnquick"
 }
 
 resource "aws_vpc" "this" {
