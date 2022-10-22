@@ -1,21 +1,23 @@
 #!/bin/bash
 set -x
 
-sudo yum update -y
-sudo yum install -y nc tc
+sudo -s
+
+yum update -y
+yum install -y nc tc
 
 # Visited this tutorial re: installing OpenVPN server https://tecadmin.net/install-openvpn-centos-8/
-sudo sysctl -w net.ipv4.ip_forward=1
-sudo amazon-linux-extras install -y epel
-sudo yum update -y
+sysctl -w net.ipv4.ip_forward=1
+amazon-linux-extras install -y epel
+yum update -y
 
-sudo yum install -y easy-rsa openvpn firewalld
-sudo yum update -y
+yum install -y easy-rsa openvpn firewalld
+yum update -y
 
-sudo mkdir -p /etc/easy-rsa
+mkdir -p /etc/easy-rsa
 cd /etc/easy-rsa
 
-cat <<EOF | sudo tee /etc/easy-rsa/vars
+cat <<EOF | tee /etc/easy-rsa/vars
 #!/bin/sh
 
 # consult https://github.com/OpenVPN/easy-rsa.git, file vars.example
@@ -75,22 +77,28 @@ set_var EASYRSA_SSL_CONF        "$EASYRSA_PKI/openssl-easyrsa.cnf"
 
 EOF
 
-sudo cp -r /usr/share/easy-rsa/3/* -t /etc/easy-rsa/
+cp -f -r /usr/share/easy-rsa/3/* -t /etc/easy-rsa/
 cd /etc/easy-rsa
-sudo ./easyrsa init-pki
+./easyrsa init-pki
 
 # from this point on, this needs to be done manually
 # refer to https://www.howtoforge.com/tutorial/how-to-install-openvpn-server-and-client-with-easy-rsa-3-on-centos-8/
 # this cannot be done automatically by EC2 instance's user data
 
-<<manuallyDoThis
 
-sudo ./easyrsa build-ca
 
-sudo -s
+# sudo -s # begin `-s`
+export EASYRSA_BATCH=1
+
+./easyrsa build-ca nopass
+
 ./easyrsa gen-req benj-openvpn-server nopass
 ./easyrsa sign-req server benj-openvpn-server
 openssl verify -CAfile pki/ca.crt pki/issued/benj-openvpn-server.crt
+
+./easyrsa gen-req client00 nopass
+./easyrsa sign-req client client00
+openssl verify -CAfile pki/ca.crt pki/issued/client00.crt
 
 ./easyrsa gen-req client01 nopass
 ./easyrsa sign-req client client01
@@ -107,34 +115,35 @@ openssl verify -CAfile pki/ca.crt pki/issued/client03.crt
 ./easyrsa gen-dh
 
 # test revoking
-./easyrsa revoke client01
+./easyrsa revoke client00
 ./easyrsa gen-crl
 
-exit
+# exit # exit `-s`
 
 # move the certificates to OpenVPN directory
 
-sudo cp /etc/easy-rsa/pki/ca.crt /etc/openvpn/server/
-sudo cp /etc/easy-rsa/pki/issued/benj-openvpn-server.crt /etc/openvpn/server/
-sudo cp /etc/easy-rsa/pki/private/benj-openvpn-server.key /etc/openvpn/server/
+cp /etc/easy-rsa/pki/ca.crt /etc/openvpn/server/
+cp /etc/easy-rsa/pki/issued/benj-openvpn-server.crt /etc/openvpn/server/
+cp /etc/easy-rsa/pki/private/benj-openvpn-server.key /etc/openvpn/server/
 
-sudo cp /etc/easy-rsa/pki/ca.crt /etc/openvpn/client/
+cp /etc/easy-rsa/pki/ca.crt /etc/openvpn/client/
 
-sudo cp /etc/easy-rsa/pki/issued/client01.crt /etc/openvpn/client/
-sudo cp /etc/easy-rsa/pki/private/client01.key /etc/openvpn/client/
+cp /etc/easy-rsa/pki/issued/client01.crt /etc/openvpn/client/
+cp /etc/easy-rsa/pki/private/client01.key /etc/openvpn/client/
 
-sudo cp /etc/easy-rsa/pki/issued/client02.crt /etc/openvpn/client/
-sudo cp /etc/easy-rsa/pki/private/client02.key /etc/openvpn/client/
+cp /etc/easy-rsa/pki/issued/client02.crt /etc/openvpn/client/
+cp /etc/easy-rsa/pki/private/client02.key /etc/openvpn/client/
 
-sudo cp /etc/easy-rsa/pki/issued/client03.crt /etc/openvpn/client/
-sudo cp /etc/easy-rsa/pki/private/client03.key /etc/openvpn/client/
+cp /etc/easy-rsa/pki/issued/client03.crt /etc/openvpn/client/
+cp /etc/easy-rsa/pki/private/client03.key /etc/openvpn/client/
 
-sudo cp /etc/easy-rsa/pki/dh.pem /etc/openvpn/server/
-sudo cp /etc/easy-rsa/pki/crl.pem /etc/openvpn/server/
+cp /etc/easy-rsa/pki/dh.pem /etc/openvpn/server/
+cp /etc/easy-rsa/pki/crl.pem /etc/openvpn/server/
 
+<<manuallyDoThis
 manuallyDoThis
 
-cat <<EOF | sudo tee /etc/openvpn/server/server.conf
+cat <<EOF | tee /etc/openvpn/server/server.conf
 # OpenVPN Port, Protocol, and the Tun
 port 1194
 proto udp
@@ -182,10 +191,99 @@ log-append /var/log/openvpn.log
 verb 3
 EOF
 
+
+mkdir -p /etc/openvpn/buildovpnfile/
+cd /etc/openvpn/buildovpnfile/
+
+cat <<EOF | tee /etc/openvpn/buildovpnfile/client.ovpn.template
+client
+dev tun
+proto udp
+
+remote %IPPUBLIC% 1194
+
+#ca ca.crt
+#cert client02.crt
+#key client02.key
+
+cipher AES-256-CBC
+auth SHA512
+auth-nocache
+tls-version-min 1.2
+tls-cipher TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA256:TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+
+resolv-retry infinite
+compress lz4
+nobind
+persist-key
+persist-tun
+mute-replay-warnings
+verb 3
+
+<ca>
+%CA%
+</ca>
+
+<cert>
+%CERT%
+</cert>
+
+<key>
+%KEY%
+</key>
+EOF
+
+# sudo -s # begin `-s`
+
+clientname="client01"
+cp client.ovpn.template $clientname.ovpn
+cd /etc/openvpn/buildovpnfile/
+
+curl http://169.254.169.254/latest/meta-data/public-ipv4 > /etc/openvpn/buildovpnfile/$clientname-ipPub.txt
+cat /etc/openvpn/server/ca.crt > /etc/openvpn/buildovpnfile/$clientname-caCrt.txt
+cat /etc/openvpn/client/client01.crt | sed -r -e '/Certificate:/d' | sed -r -e '/^ +.+$/d' | sed -r -e '/^\s*$/d' > /etc/openvpn/buildovpnfile/$clientname-clientCrt.txt
+cat /etc/openvpn/client/client01.key > /etc/openvpn/buildovpnfile/$clientname-clientKey.txt
+
+sed -e "s/%IPPUBLIC%/`cat /etc/openvpn/buildovpnfile/$clientname-ipPub.txt`/1" -i $clientname.ovpn
+sed -e '/%CA%/ {' -e "r /etc/openvpn/buildovpnfile/$clientname-caCrt.txt" -e 'd' -e '}' -i $clientname.ovpn
+sed -e '/%CERT%/ {' -e "r /etc/openvpn/buildovpnfile/$clientname-clientCrt.txt" -e 'd' -e '}' -i $clientname.ovpn
+sed -e '/%KEY%/ {' -e "r /etc/openvpn/buildovpnfile/$clientname-clientKey.txt" -e 'd' -e '}' -i $clientname.ovpn
+
+# exit # exit `-s`
+
 <<manuallyDoThis
 
-sudo systemctl start firewalld
-sudo systemctl enable firewalld
+cd /etc/openvpn/buildovpnfile/
+
+# sudo -s
+cat
+sed -e '/REPLACETHIS/ {' -e 'r tempt.txt' -e 'd' -e '}'
+
+curl http://169.254.169.254/latest/meta-data/public-ipv4 > /etc/openvpn/buildovpnfile/ipPub.txt
+cat /etc/openvpn/server/ca.crt > /etc/openvpn/buildovpnfile/caCrt.txt
+cat /etc/openvpn/client/client01.crt | sed -r -e '/Certificate:/d' | sed -r -e '/^ +.+$/d' > /etc/openvpn/buildovpnfile/clientCrt.txt
+cat /etc/openvpn/client/client01.key > /etc/openvpn/buildovpnfile/clientKey.txt
+
+ipPub=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
+caCrt=`cat /etc/openvpn/server/ca.crt`
+clientCrt=`cat /etc/openvpn/client/client01.crt | sed -r -e '/Certificate:/d' | sed -r -e '/^ +.+$/d'`
+clientKey=`cat /etc/openvpn/client/client01.key`
+
+%CA%
+%CERT%
+%KEY%
+
+cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%IPPUBLIC%/$ipPub/g"
+cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%CA%/$caCrt/g"
+cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%CERT%/$clienCrt/g"
+cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%KEY%/$clientKey/g"
+
+
+manuallyDoThis
+
+
+systemctl start firewalld
+systemctl enable firewalld
 
 firewall-cmd --permanent --add-service=openvpn
 firewall-cmd --permanent --zone=trusted --add-service=openvpn
@@ -199,9 +297,10 @@ firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10
 
 firewall-cmd --reload
 
-sudo systemctl start openvpn-server@server
-sudo systemctl enable openvpn-server@server
+systemctl start openvpn-server@server
+systemctl enable openvpn-server@server
 
+<<manuallyDoThis
 manuallyDoThis
 
 
