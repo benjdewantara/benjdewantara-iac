@@ -251,37 +251,6 @@ sed -e '/%KEY%/ {' -e "r /etc/openvpn/buildovpnfile/$clientname-clientKey.txt" -
 
 # exit # exit `-s`
 
-<<manuallyDoThis
-
-cd /etc/openvpn/buildovpnfile/
-
-# sudo -s
-cat
-sed -e '/REPLACETHIS/ {' -e 'r tempt.txt' -e 'd' -e '}'
-
-curl http://169.254.169.254/latest/meta-data/public-ipv4 > /etc/openvpn/buildovpnfile/ipPub.txt
-cat /etc/openvpn/server/ca.crt > /etc/openvpn/buildovpnfile/caCrt.txt
-cat /etc/openvpn/client/client01.crt | sed -r -e '/Certificate:/d' | sed -r -e '/^ +.+$/d' > /etc/openvpn/buildovpnfile/clientCrt.txt
-cat /etc/openvpn/client/client01.key > /etc/openvpn/buildovpnfile/clientKey.txt
-
-ipPub=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
-caCrt=`cat /etc/openvpn/server/ca.crt`
-clientCrt=`cat /etc/openvpn/client/client01.crt | sed -r -e '/Certificate:/d' | sed -r -e '/^ +.+$/d'`
-clientKey=`cat /etc/openvpn/client/client01.key`
-
-%CA%
-%CERT%
-%KEY%
-
-cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%IPPUBLIC%/$ipPub/g"
-cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%CA%/$caCrt/g"
-cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%CERT%/$clienCrt/g"
-cat /etc/openvpn/client/client01.ovpn | sed -r -e "s/%KEY%/$clientKey/g"
-
-
-manuallyDoThis
-
-
 systemctl start firewalld
 systemctl enable firewalld
 
@@ -300,7 +269,5 @@ firewall-cmd --reload
 systemctl start openvpn-server@server
 systemctl enable openvpn-server@server
 
-<<manuallyDoThis
-manuallyDoThis
 
 
