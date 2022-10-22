@@ -127,10 +127,10 @@ resource "aws_security_group" "this" {
 
   ingress {
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow incoming from all"
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
+    description = "Allow incoming from all but only port 1994"
+    from_port   = 1194
+    protocol    = "udp"
+    to_port     = 1194
   }
 }
 
