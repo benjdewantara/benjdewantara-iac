@@ -53,6 +53,13 @@ resource "aws_s3_bucket_website_configuration" "this" {
 resource "aws_s3_object" "index_html" {
   bucket       = aws_s3_bucket.this.bucket
   key          = "index.html"
-  source       = "./objects_uploaded/index.html"
   content_type = "text/html"
+
+  content = <<EOF
+  <html>
+      <body>
+          <h1>This is benj test html for S3 bucket ${aws_s3_bucket.this.bucket} generated at ${timestamp()}</h1>
+      </body>
+  </html>
+  EOF
 }
