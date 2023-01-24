@@ -17,3 +17,10 @@ resource "aws_s3_bucket" "this" {
     "iacpath" = "cloudfront-s3-static-content/main.tf"
   }
 }
+
+
+resource "aws_s3_object" "index_html" {
+  bucket = aws_s3_bucket.this.bucket
+  key    = "index.html"
+  source = "./objects_uploaded/index.html"
+}
