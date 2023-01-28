@@ -68,10 +68,19 @@ locals {
   s3originid = "OriginId-${aws_s3_bucket.this.bucket}"
 }
 
+resource "aws_cloudfront_origin_access_control" "this" {
+  name                              = "example"
+  description                       = "Example Policy"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 resource "aws_cloudfront_distribution" "this" {
   origin {
-    domain_name = aws_s3_bucket.this.bucket_regional_domain_name
-    origin_id   = local.s3originid
+    domain_name              = aws_s3_bucket.this.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_id                = local.s3originid
   }
 
   enabled = true
@@ -79,7 +88,7 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = local.s3originid
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all"
 
     forwarded_values {
       query_string = false
