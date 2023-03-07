@@ -239,7 +239,9 @@ resource "aws_instance" "this" {
   subnet_id                   = aws_subnet.aza_web.id
   security_groups             = [aws_security_group.this.id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
+  key_name                    = var.ec2_keypair_name
 
+  user_data = file("./user_data.sh")
 
   tags = {
     Name    = "ec2-${local.friendlyname}"
