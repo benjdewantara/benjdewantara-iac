@@ -1,5 +1,4 @@
 #!/bin/bash
-sudo yum update -y
 
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt
 sudo wget -r --no-parent -A 'epel-release-*.rpm' https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/
@@ -19,6 +18,7 @@ instruction
 
 # sudo systemctl restart httpd
 
+sudo yum update -y
 sudo amazon-linux-extras install epel -y
 sudo yum install -y certbot python2-certbot-apache
 # sudo certbot
