@@ -33,13 +33,29 @@ Listen 80
 </VirtualHost>
 EOM
 
-echo "" > /etc/httpd/conf/insertContent.txt
 echo "$insertThis" > /etc/httpd/conf/insertContent.txt
-
 sed -e '/Listen 80/ {' -e "r /etc/httpd/conf/insertContent.txt" -e 'd' -e '}' -i /etc/httpd/conf/httpd.conf
+
+read -r -d '' insertThis << EOM
+<html>
+  <body>
+    <p>Hello world at `date --iso-8601='ns' | sed -e 's/,/./'`</p>
+  </body>
+</html>
+EOM
+
+echo "$insertThis" > /var/www/html/index.html
 
 # unalias rm
 # /bin/rm /etc/httpd/conf/insertContent.txt
+
+yum install -y mod_ssl
+cd /etc/pki/tls/certs
+./make-dummy-cert localhost.crt
+
+/bin/cp localhost.crt localhost.key
+
+sed -n '/-----BEGIN PRIVATE KEY-----/, /-----END PRIVATE KEY-----/p' localhost.crt > /etc/pki/tls/private/localhost.key
 
 systemctl restart httpd
 
