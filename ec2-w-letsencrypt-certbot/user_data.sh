@@ -5,6 +5,9 @@ sudo -s
 
 yum update -y
 
+yum install -y httpd
+[[ `systemctl is-enabled httpd` != "enabled" ]] && systemctl start httpd && systemctl enable httpd
+
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt
 wget -r --no-parent -A 'epel-release-*.rpm' https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/
 rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-*.rpm
@@ -21,7 +24,7 @@ Edit the main Apache configuration file, /etc/httpd/conf/httpd.conf. Locate the 
 </VirtualHost>
 instruction
 
-sudo read -r -d '' insertThis << EOM
+read -r -d '' insertThis << EOM
 Listen 80
 <VirtualHost *:80>
     DocumentRoot "/var/www/html"
@@ -30,16 +33,13 @@ Listen 80
 </VirtualHost>
 EOM
 
-sudo echo "" > /etc/httpd/conf/insertContent.txt
-sudo echo "$insertThis" > /etc/httpd/conf/insertContent.txt
+echo "" > /etc/httpd/conf/insertContent.txt
+echo "$insertThis" > /etc/httpd/conf/insertContent.txt
 
-# unalias cp
-sudo /bin/cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bak
-
-sudo sed -e '/Listen 80/ {' -e "r /etc/httpd/conf/insertContent.txt" -e 'd' -e '}' -i /etc/httpd/conf/httpd.conf.bak
+sed -e '/Listen 80/ {' -e "r /etc/httpd/conf/insertContent.txt" -e 'd' -e '}' -i /etc/httpd/conf/httpd.conf
 
 # unalias rm
-sudo /bin/rm /etc/httpd/conf/insertContent.txt
+# /bin/rm /etc/httpd/conf/insertContent.txt
 
 systemctl restart httpd
 
