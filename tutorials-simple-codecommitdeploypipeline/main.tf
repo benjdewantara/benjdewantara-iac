@@ -349,8 +349,9 @@ resource "aws_codepipeline" "this" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        BranchName     = "master",
-        RepositoryName = aws_codecommit_repository.this.repository_name
+        BranchName           = "master",
+        RepositoryName       = aws_codecommit_repository.this.repository_name
+        PollForSourceChanges = false
       }
     }
   }
@@ -390,4 +391,73 @@ resource "aws_codepipeline" "this" {
     #   type = "KMS"
     # }
   }
+}
+
+resource "aws_cloudwatch_event_rule" "this" {
+  description = "This will trigger CodePipeline ${aws_codepipeline.this.name}"
+  name        = "trigger-commit"
+
+  event_pattern = jsonencode({
+    "source" : ["aws.codecommit"],
+    "detail-type" : ["CodeCommit Repository State Change"],
+    "resources" : [
+      # "arn:aws:codecommit:ap-southeast-1:948541605465:MyDemoRepo",
+      aws_codecommit_repository.this.arn
+    ],
+    "detail" : {
+      "event" : ["referenceCreated", "referenceUpdated"],
+      "referenceType" : ["branch"],
+      "referenceName" : ["master"]
+    }
+  })
+
+  tags = {
+    "iacpath" = "tutorials-simple-codecommitdeploypipeline/main.tf"
+  }
+}
+
+resource "aws_iam_role" "cwe-start-codepipeline" {
+  name = "iamr-cwe-start-codepipeline"
+
+  inline_policy {
+    name = "iampolicy_inline_iamrole_benj_web"
+    policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "VisualEditor0",
+          "Effect" : "Allow",
+          "Action" : [
+            "codepipeline:StartPipelineExecution"
+          ],
+          "Resource" : [
+            aws_codepipeline.this.arn
+          ]
+        }
+      ]
+    })
+  }
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Principal" : {
+          "Service" : [
+            "events.amazonaws.com"
+          ]
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_cloudwatch_event_target" "this" {
+  role_arn = aws_iam_role.cwe-start-codepipeline.arn
+  arn      = aws_codepipeline.this.arn
+  rule     = aws_cloudwatch_event_rule.this.id
 }
