@@ -7,6 +7,8 @@ set -euo pipefail
 # function's deployment package, alongside this bootstrap executable.
 source $(dirname "$0")/"$(echo $_HANDLER | cut -d. -f1).sh"
 
+# sudo dnf install -y findutils
+
 while true; do
     # Request the next event from the Lambda runtime
     HEADERS="$(mktemp)"

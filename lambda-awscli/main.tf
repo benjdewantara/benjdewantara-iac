@@ -51,7 +51,7 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.this.output_base64sha256
 
   handler = "main.functionbenj"
-  runtime = "provided.al2"
+  runtime = "provided.al2023"
 
   timeout     = 30
   memory_size = 512
