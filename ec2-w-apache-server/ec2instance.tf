@@ -3,7 +3,7 @@ data "template_file" "user_data_ec2_instance" {
 
   vars = {
     domainNameThis = local.domain_name_public
-    email_certbot = local.email_certbot
+    email_certbot  = local.email_certbot
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_iam_role" "this" {
   name = "iamr-${local.friendlyname}"
 
   inline_policy {
-    name = "iampolicy_inline_iamrole_benj_web"
+    name   = "iampolicy_inline_iamrole_benj_web"
     policy = jsonencode({
       "Version" : "2012-10-17",
       "Statement" : [
@@ -91,6 +91,8 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_instance" "this" {
+  depends_on = [aws_route53_record.this, aws_route53_record.this_www]
+
   ami                         = data.aws_ami.amazon-linux-2.image_id
   instance_type               = "t3.micro"
   associate_public_ip_address = true
@@ -111,7 +113,7 @@ resource "aws_instance" "this" {
     ignore_changes = [
       # Ignore changes to tags, e.g. because a management agent
       # updates these based on some ruleset managed elsewhere.
-      # security_groups,
+       security_groups,
     ]
   }
 }
