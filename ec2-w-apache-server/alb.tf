@@ -52,14 +52,17 @@ resource "aws_lb_target_group" "this_https" {
 }
 
 resource "aws_lb_listener" "this_https" {
-  depends_on = [aws_acm_certificate_validation.this]
+  depends_on = [module.cert_ap_southeast_1.acm_this, time_sleep.delay_cert_ap_southeast_1]
 
   load_balancer_arn = aws_lb.this.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
+
   #  certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
-  certificate_arn   = aws_acm_certificate.this.arn
+
+  #  certificate_arn   = module.cert_ap_southeast_1.acm_this.arn
+  certificate_arn = module.cert_ap_southeast_1.acm_this.arn
 
   default_action {
     type             = "forward"

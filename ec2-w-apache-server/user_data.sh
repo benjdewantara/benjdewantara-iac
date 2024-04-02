@@ -25,6 +25,10 @@ Edit the main Apache configuration file, /etc/httpd/conf/httpd.conf. Locate the 
 instruction
 
 read -r -d '' insertThis <<EOM
+<FilesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+ Header set Cache-Control "max-age=63072000, public"
+</FilesMatch>
+
 Listen 80
 <VirtualHost *:80>
     DocumentRoot "/var/www/html"
@@ -40,13 +44,19 @@ read -r -d '' insertThis <<EOM
 <html>
   <body>
     <p>Hello world at $(date --iso-8601='ns' | sed -e 's/,/./')</p>
+    <img src="random.jpg">
   </body>
 </html>
 EOM
 
 echo "$insertThis" >/var/www/html/index.html
 
-# unalias rm
+mkdir -r "/var/www/img"
+curl --request GET -sL \
+     --url 'https://picsum.photos/200/300?random=2'\
+     --output '/var/www/html/random.jpg'
+
+# unalias rm1
 # /bin/rm /etc/httpd/conf/insertContent.txt
 
 yum install -y mod_ssl
@@ -63,4 +73,4 @@ yum update -y
 amazon-linux-extras install epel -y
 yum install -y certbot python2-certbot-apache
 
-certbot run --apache --non-interactive --agree-tos --domains "${domainNameThis},www.${domainNameThis}" -m ${email_certbot}
+#certbot run --apache --non-interactive --agree-tos --domains "${domainNameThis},www.${domainNameThis}" -m ${email_certbot}
