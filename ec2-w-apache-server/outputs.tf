@@ -11,7 +11,7 @@ output "aws_lb_this_dns_name" {
   value = aws_lb.this.dns_name
 }
 
-output "aws_lb_this_dns_name1" {
+output "aws_lb_this_dns_name_split" {
   value = element(split(".", aws_lb.this.dns_name), 0)
 }
 
