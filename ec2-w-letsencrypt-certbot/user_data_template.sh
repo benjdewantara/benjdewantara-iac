@@ -67,4 +67,13 @@ yum install -y certbot python2-certbot-apache
 
 certbot run --apache --non-interactive --agree-tos --domains "${domain_param},www.${domain_param}" -m ${email_certbot}
 
-aws s3 cp '/etc/letsencrypt/live/' '${s3_bucket_cert_upload}' --recursive --include "*.pem"
+dirUploadToS3="/etc/letsencrypt-uploadToS3"
+mkdir -p $dirUploadToS3
+
+for f in $(find /etc/letsencrypt/live -iregex .*pem); do
+  filenamebase=$(basename $f)
+  filenameTarget="$dirUploadToS3/www.${domain_param}-$filenamebase"
+  cp $f $filenameTarget
+done
+
+aws s3 cp "$dirUploadToS3" '${s3_bucket_cert_upload}' --recursive --include "*.pem"
