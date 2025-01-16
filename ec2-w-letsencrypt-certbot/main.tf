@@ -5,10 +5,6 @@ provider "aws" {
 
 data "aws_region" "current" {}
 
-locals {
-  friendlyname = "ec2-w-letsencrypt-certbot"
-}
-
 resource "aws_vpc" "this" {
   cidr_block                       = "122.110.0.0/16"
   instance_tenancy                 = "default"
@@ -201,7 +197,7 @@ resource "aws_iam_role" "this" {
         {
           "Sid" : "VisualEditor0",
           "Effect" : "Allow",
-          "Action" : "s3:*",
+          "Action" : ["s3:*", "kms:*"],
           "Resource" : "*"
         }
       ]
@@ -232,6 +228,16 @@ resource "aws_iam_instance_profile" "this" {
   role = aws_iam_role.this.name
 }
 
+data "template_file" "user_data" {
+  template = file("${path.module}/user_data_template.sh")
+
+  vars = {
+    domain_param          = local.domain_name_public
+    email_certbot         = local.email_certbot
+    s3_bucket_cert_upload = local.s3_bucket_cert_upload
+  }
+}
+
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.amazon-linux-2.image_id
   instance_type               = "t3.micro"
@@ -241,7 +247,7 @@ resource "aws_instance" "this" {
   iam_instance_profile        = aws_iam_instance_profile.this.name
   key_name                    = var.ec2_keypair_name
 
-  user_data = file("./user_data.sh")
+  user_data = data.template_file.user_data.rendered
 
   tags = {
     Name    = "ec2-${local.friendlyname}"
