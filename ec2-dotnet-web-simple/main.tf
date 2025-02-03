@@ -5,10 +5,6 @@ provider "aws" {
 
 data "aws_region" "current" {}
 
-locals {
-  friendlyname = "dotnet-web-simple"
-}
-
 resource "aws_vpc" "this" {
   cidr_block                       = "192.168.0.0/24"
   instance_tenancy                 = "default"
