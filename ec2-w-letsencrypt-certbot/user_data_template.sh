@@ -42,6 +42,7 @@ read -r -d '' insertThis <<EOM
     <p>Hello world at $(date --iso-8601='ns' | sed -e 's/,/./')</p>
   </body>
 </html>
+
 EOM
 
 echo "$insertThis" >/var/www/html/index.html
@@ -76,4 +77,4 @@ for f in $(find /etc/letsencrypt/live -iregex .*pem); do
   cp $f $filenameTarget
 done
 
-aws s3 cp "$dirUploadToS3" '${s3_bucket_cert_upload}' --recursive --include "*.pem"
+aws s3 cp "$dirUploadToS3" '${s3_bucket_cert_upload}' --recursive --include "*.pem" --region '${s3_bucket_region}'

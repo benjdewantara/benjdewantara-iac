@@ -189,21 +189,6 @@ resource "aws_security_group" "this" {
 resource "aws_iam_role" "this" {
   name = "iamr-${local.friendlyname}"
 
-  inline_policy {
-    name = "iampolicy_inline_iamrole_benj_web"
-    policy = jsonencode({
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "VisualEditor0",
-          "Effect" : "Allow",
-          "Action" : ["s3:*", "kms:*"],
-          "Resource" : "*"
-        }
-      ]
-    })
-  }
-
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -220,7 +205,28 @@ resource "aws_iam_role" "this" {
       }
     ]
   })
+}
 
+resource "aws_iam_role_policy" "this" {
+  name = "iampolicy_inline_iamrole_benj_web"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "VisualEditor0",
+        "Effect" : "Allow",
+        "Action" : ["s3:*", "kms:*"],
+        "Resource" : "*"
+      }
+    ]
+  })
+
+  role = aws_iam_role.this.name
+}
+
+resource "aws_iam_role_policies_exclusive" "example" {
+  role_name    = aws_iam_role.this.name
+  policy_names = [aws_iam_role_policy.this.name]
 }
 
 resource "aws_iam_instance_profile" "this" {
@@ -235,6 +241,7 @@ data "template_file" "user_data" {
     domain_param          = local.domain_name_public
     email_certbot         = local.email_certbot
     s3_bucket_cert_upload = local.s3_bucket_cert_upload
+    s3_bucket_region      = local.s3_bucket_region
   }
 }
 
@@ -245,7 +252,7 @@ resource "aws_instance" "this" {
   subnet_id                   = aws_subnet.aza_web.id
   security_groups             = [aws_security_group.this.id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
-  key_name                    = var.ec2_keypair_name
+  # key_name                    = var.ec2_keypair_name
 
   user_data = data.template_file.user_data.rendered
 

@@ -9,4 +9,5 @@ locals {
   friendlyname = "blank"
 
   s3_bucket_cert_upload = "s3://blank"
+  s3_bucket_region      = "xx-northeastsouthwest-99"
 }
