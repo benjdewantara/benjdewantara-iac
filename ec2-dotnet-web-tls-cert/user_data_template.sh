@@ -60,7 +60,7 @@ Environment=ASPNETCORE_URLS=https://*:443/
 Environment=DOTNET_NOLOGO=true
 Environment=Kestrel__Endpoints__HttpsInlineCertAndKeyFile__Certificate__KeyPath=$cert_key_filepath
 Environment=Kestrel__Endpoints__HttpsInlineCertAndKeyFile__Certificate__Path=$cert_filepath
-Environment=Kestrel__Endpoints__HttpsInlineCertAndKeyFile__Url=${app_url}
+Environment=Kestrel__Endpoints__HttpsInlineCertAndKeyFile__Url=${app_url_https}
 
 [Install]
 WantedBy=multi-user.target

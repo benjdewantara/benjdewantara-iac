@@ -24,7 +24,7 @@ data "template_file" "user_data" {
 
   vars = {
     git_dotnet_project      = local.git_dotnet_project
-    app_url                 = local.app_url_https
+    app_url_https           = local.app_url_https
     s3_uri_cert             = local.s3_uri_cert
     s3_uri_cert_private_key = local.s3_uri_cert_private_key
     s3_bucket_region_cert   = local.s3_bucket_region_cert
