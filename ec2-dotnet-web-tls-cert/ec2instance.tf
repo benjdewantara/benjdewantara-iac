@@ -24,7 +24,7 @@ data "template_file" "user_data" {
 
   vars = {
     git_dotnet_project      = local.git_dotnet_project
-    app_url                 = local.app_url
+    app_url                 = local.app_url_https
     s3_uri_cert             = local.s3_uri_cert
     s3_uri_cert_private_key = local.s3_uri_cert_private_key
     s3_bucket_region_cert   = local.s3_bucket_region_cert
@@ -98,11 +98,11 @@ resource "aws_instance" "this" {
     iacpath = "ec2-dotnet-web-tls-cert/ec2instance.tf"
   }
 
-  # lifecycle {
-  #   ignore_changes = [
-  #     # Ignore changes to tags, e.g. because a management agent
-  #     # updates these based on some ruleset managed elsewhere.
-  #     security_groups,
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      security_groups,
+    ]
+  }
 }
