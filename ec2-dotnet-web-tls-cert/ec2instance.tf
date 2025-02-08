@@ -95,7 +95,7 @@ resource "aws_instance" "this" {
 
   tags = {
     Name    = "ec2-${local.friendlyname}"
-    iacpath = "ec2-dotnet-web-tls-cert/ec2instance.tf"
+    iacpath = "${local.friendlyname}/ec2instance.tf"
   }
 
   lifecycle {

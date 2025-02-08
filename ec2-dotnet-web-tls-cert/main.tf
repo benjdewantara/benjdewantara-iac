@@ -15,7 +15,7 @@ resource "aws_vpc" "this" {
 
   tags = {
     Name    = "vpc-${local.friendlyname}"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -28,7 +28,7 @@ resource "aws_subnet" "aza_apps" {
 
   tags = {
     Name    = "subnet-aza-apps"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_subnet" "aza_web" {
 
   tags = {
     Name    = "subnet-aza-web"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -55,7 +55,7 @@ resource "aws_subnet" "azb_apps" {
 
   tags = {
     Name    = "subnet-azb-apps"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -69,7 +69,7 @@ resource "aws_subnet" "azb_web" {
 
   tags = {
     Name    = "subnet-azb-web"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -82,7 +82,7 @@ resource "aws_subnet" "azc_apps" {
 
   tags = {
     Name    = "subnet-azc-apps"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
@@ -96,7 +96,7 @@ resource "aws_subnet" "azc_web" {
 
   tags = {
     Name    = "subnet-azc-web"
-    iacpath = "ec2-dotnet-web-tls-cert/main.tf"
+    iacpath = "${local.friendlyname}/main.tf"
   }
 }
 
