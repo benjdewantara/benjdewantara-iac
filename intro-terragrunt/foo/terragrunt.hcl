@@ -3,5 +3,5 @@ terraform {
 }
 
 inputs = {
-  nickname = "foo-arg-from-hcl"
+  nickname = "foo"
 }
