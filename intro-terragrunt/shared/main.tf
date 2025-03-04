@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.3"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.81.0"
+    }
   }
 }
 provider "aws" {
@@ -35,6 +39,6 @@ resource "aws_s3_bucket" "this" {
   bucket = local.bucket_name_random
 }
 
-output "bucket_name" {
+output "bucket_arn" {
   value = aws_s3_bucket.this.arn
 }
