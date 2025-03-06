@@ -16,7 +16,7 @@ locals {
   iam_role_codepipeline_individual_app = "iamr-${var.system_nickname}-codepipeline"
 }
 
-resource "aws_iam_role" "codepipeline_individual_app" {
+resource "aws_iam_role" "this" {
   name = local.iam_role_codepipeline_individual_app
 
   assume_role_policy = jsonencode({
@@ -37,9 +37,9 @@ resource "aws_iam_role" "codepipeline_individual_app" {
   })
 }
 
-resource "aws_iam_role_policy" "codepipeline_individual_service" {
+resource "aws_iam_role_policy" "this" {
   name = "inline-${local.iam_role_codepipeline_individual_app}"
-  role = aws_iam_role.codepipeline_individual_app.id
+  role = aws_iam_role.this.id
 
   policy = jsonencode(
     {
