@@ -35,5 +35,27 @@ resource "aws_iam_role" "codepipeline_individual_app" {
       }
     ]
   })
+}
 
+resource "aws_iam_role_policy" "codepipeline_individual_service" {
+  name = "inline-${local.iam_role_codepipeline_individual_app}"
+  role = aws_iam_role.codepipeline_individual_app.id
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "VisualEditor0",
+          "Effect" : "Allow",
+          "Action" : [
+            "codecommit:*",
+            "s3:*",
+            "kms:*"
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
 }
