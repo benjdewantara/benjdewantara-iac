@@ -23,11 +23,12 @@ data "template_file" "user_data" {
   template = file("${path.module}/user_data_template.sh")
 
   vars = {
-    git_dotnet_project      = local.git_dotnet_project
-    app_url_https           = local.app_url_https
-    s3_uri_cert             = local.s3_uri_cert
-    s3_uri_cert_private_key = local.s3_uri_cert_private_key
-    s3_bucket_region_cert   = local.s3_bucket_region_cert
+    git_dotnet_project        = local.git_dotnet_project
+    git_dotnet_project_subdir = local.git_dotnet_project_subdir
+    app_url_https             = local.app_url_https
+    s3_uri_cert               = local.s3_uri_cert
+    s3_uri_cert_private_key   = local.s3_uri_cert_private_key
+    s3_bucket_region_cert     = local.s3_bucket_region_cert
   }
 }
 

@@ -22,7 +22,7 @@ resource "aws_vpc" "this" {
 
 resource "aws_subnet" "aza_apps" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}a"
+  availability_zone = "${data.aws_region.current.region}a"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 0)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 0)
 
@@ -34,7 +34,7 @@ resource "aws_subnet" "aza_apps" {
 
 resource "aws_subnet" "aza_web" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}a"
+  availability_zone = "${data.aws_region.current.region}a"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 1)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 1)
 
@@ -48,7 +48,7 @@ resource "aws_subnet" "aza_web" {
 
 resource "aws_subnet" "azb_apps" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}b"
+  availability_zone = "${data.aws_region.current.region}b"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 2)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 2)
 
@@ -61,7 +61,7 @@ resource "aws_subnet" "azb_apps" {
 
 resource "aws_subnet" "azb_web" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}b"
+  availability_zone = "${data.aws_region.current.region}b"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 3)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 3)
 
@@ -75,7 +75,7 @@ resource "aws_subnet" "azb_web" {
 
 resource "aws_subnet" "azc_apps" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}c"
+  availability_zone = "${data.aws_region.current.region}c"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 4)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 4)
 
@@ -88,7 +88,7 @@ resource "aws_subnet" "azc_apps" {
 
 resource "aws_subnet" "azc_web" {
   vpc_id            = aws_vpc.this.id
-  availability_zone = "${data.aws_region.current.name}c"
+  availability_zone = "${data.aws_region.current.region}c"
   cidr_block        = cidrsubnet(aws_vpc.this.cidr_block, 4, 5)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 5)
 
