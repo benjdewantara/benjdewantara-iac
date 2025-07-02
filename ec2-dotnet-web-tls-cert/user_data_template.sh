@@ -24,9 +24,9 @@ cert_key_filepath="$HOME/privatekey.pem"
 aws s3 cp '${s3_uri_cert}' $cert_filepath --region '${s3_bucket_region_cert}'
 aws s3 cp '${s3_uri_cert_private_key}' $cert_key_filepath --region '${s3_bucket_region_cert}'
 
-[[ -d $git_dotnet_project_subdir  ]] \
-&& echo "Will cd into $git_dotnet_project_subdir" \
-&& cd git_dotnet_project_subdir
+[ -d $git_dotnet_project_subdir ] &&
+    echo "Will cd into $git_dotnet_project_subdir" &&
+    cd git_dotnet_project_subdir
 
 filename_csproj=$(find . -type f -iregex .*csproj | head -n 1)
 filename_csproj=$(realpath $filename_csproj)
