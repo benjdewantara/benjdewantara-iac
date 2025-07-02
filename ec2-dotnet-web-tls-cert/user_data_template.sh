@@ -7,7 +7,7 @@ yum update -y
 
 yum install -y git socat iptables
 #yum install -y dotnet
-yum install dotnet-sdk-8.0
+yum install dotnet-runtime-8.0
 
 #exit
 
@@ -26,7 +26,7 @@ aws s3 cp '${s3_uri_cert_private_key}' $cert_key_filepath --region '${s3_bucket_
 
 [ -d $git_dotnet_project_subdir ] &&
     echo "Will cd into $git_dotnet_project_subdir" &&
-    cd git_dotnet_project_subdir
+    cd $git_dotnet_project_subdir
 
 filename_csproj=$(find . -type f -iregex .*csproj | head -n 1)
 filename_csproj=$(realpath $filename_csproj)
