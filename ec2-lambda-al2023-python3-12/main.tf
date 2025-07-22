@@ -15,7 +15,7 @@ resource "aws_vpc" "this" {
 
   tags = {
     Name    = "vpc-${local.friendlyname}"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -27,8 +27,8 @@ resource "aws_subnet" "aza_apps" {
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 0)
 
   tags = {
-    Name    = "subnet-aza-apps"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-aza-app-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -41,8 +41,8 @@ resource "aws_subnet" "aza_web" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "subnet-aza-web"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-aza-web-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -54,8 +54,8 @@ resource "aws_subnet" "azb_apps" {
 
 
   tags = {
-    Name    = "subnet-azb-apps"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-azb-app-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -68,8 +68,8 @@ resource "aws_subnet" "azb_web" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "subnet-azb-web"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-azb-web-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -81,8 +81,8 @@ resource "aws_subnet" "azc_apps" {
 
 
   tags = {
-    Name    = "subnet-azc-apps"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-azc-app-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -95,8 +95,8 @@ resource "aws_subnet" "azc_web" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "subnet-azc-web"
-    iacpath = "ec2-dotnet-web-simple/main.tf"
+    Name    = "subnet-azc-web-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -105,7 +105,7 @@ resource "aws_internet_gateway" "this" {
 
   tags = {
     Name    = "igw-${local.friendlyname}"
-    iacpath = "benj-apache-wkwk/main.tf"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -118,8 +118,8 @@ resource "aws_route_table" "this" {
   }
 
   tags = {
-    Name    = "rtb-benj"
-    iacpath = "benj-apache-wkwk/main.tf"
+    Name    = "rtb-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
   }
 }
 
@@ -141,7 +141,7 @@ resource "aws_route_table_association" "rtb_assoc_web_3" {
 resource "aws_security_group" "this" {
   vpc_id      = aws_vpc.this.id
   name        = "secgroup-${local.friendlyname}"
-  description = "This is security group benj_web"
+  description = "This is security group ${local.friendlyname}"
 
   egress {
     cidr_blocks      = ["0.0.0.0/0"]
