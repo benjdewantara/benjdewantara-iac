@@ -4,6 +4,6 @@ provider "aws" {
 }
 
 locals {
-  friendlyname          = "benj-docker-python3-12new"
+  friendlyname          = "benj-docker-python3-12new1"
   zip_full_filenamepath = "./docker-python3.12new.benj.zip"
 }

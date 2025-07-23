@@ -7,5 +7,5 @@ resource "aws_lambda_layer_version" "docker_python" {
   compatible_architectures = ["x86_64"]
   compatible_runtimes = ["python3.12"]
 
-  # skip_destroy = true
+  skip_destroy = true
 }
