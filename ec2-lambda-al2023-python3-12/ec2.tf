@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "this" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "iamrp-${local.friendlyname}-allow-s3",
+          "Sid" : "${local.friendlyname}AllowS3",
           "Effect" : "Allow",
           "Action" : "s3:*",
           "Resource" : "*"
