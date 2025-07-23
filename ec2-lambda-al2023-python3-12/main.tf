@@ -1,8 +1,3 @@
-provider "aws" {
-  profile = "benj"
-  region  = "ap-southeast-3"
-}
-
 data "aws_region" "current" {}
 
 resource "aws_vpc" "this" {
