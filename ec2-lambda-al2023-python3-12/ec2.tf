@@ -63,6 +63,14 @@ data "aws_ami" "amazon-linux-2023" {
   }
 }
 
+data "template_file" "user_data" {
+  template = file("${path.module}/user_data_template.sh")
+
+  vars = {
+    # still nothing for now
+  }
+}
+
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.amazon-linux-2023.id
   instance_type               = "t3.micro"
@@ -70,6 +78,8 @@ resource "aws_instance" "this" {
   subnet_id                   = aws_subnet.aza_web.id
   security_groups = [aws_security_group.this.id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
+
+  user_data = data.template_file.user_data.rendered
 
   tags = {
     Name    = "ec2-${local.friendlyname}"
