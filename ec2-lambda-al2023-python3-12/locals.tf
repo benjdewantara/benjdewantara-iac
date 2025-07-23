@@ -4,5 +4,7 @@ provider "aws" {
 }
 
 locals {
-  friendlyname = "bnj-build-lambda-layer"
+  friendlyname        = "bnj-build-lambda-layer"
+  s3_uri_dump_results = ""
+  s3_uri_dump_results_trimmed = trim(local.s3_uri_dump_results, "/")
 }
