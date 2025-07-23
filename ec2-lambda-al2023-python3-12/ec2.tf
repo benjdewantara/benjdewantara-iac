@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "this" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "${local.friendlyname}AllowS3",
+          "Sid" : "AllowS3",
           "Effect" : "Allow",
           "Action" : "s3:*",
           "Resource" : "*"
@@ -37,11 +37,6 @@ resource "aws_iam_role_policy" "this" {
     }
   )
 }
-
-# resource "aws_iam_policy" "this" {
-#   name = "iamr-${local.friendlyname}"
-#   policy = ""
-# }
 
 resource "aws_iam_instance_profile" "this" {
   name = "iamip-${local.friendlyname}"
