@@ -6,7 +6,8 @@ set -x
 
 cd
 
+HOME="/home/ec2-user"
 touch "$HOME/timestamp-before-isntalling-python-3-12"
 yum update -y
-yum install -y python3.12 pip
-
+# yum install -y python3.12
+yum install -y pip
