@@ -23,6 +23,7 @@ pip install --user pipenv
 # shellcheck disable=SC3046
 source $HOME/$project_name/bin/activate
 pip install docker
+pip install requests
 
 cd $HOME || exit
 zip $project_name.zip -r $project_name
