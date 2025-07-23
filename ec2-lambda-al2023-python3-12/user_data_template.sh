@@ -24,7 +24,10 @@ pip install --user pipenv
 source $HOME/$project_name/bin/activate
 pip install docker
 pip install requests
+pip install chardet
 
 cd $HOME || exit
+rm -rf $project_name/lib/python3.12/site-packages/pip* $project_name/bin/
 zip $project_name.zip -r $project_name
 aws s3 cp ./$project_name.zip "${s3_uri_dump_results_trimmed}/$project_name.zip"
+
