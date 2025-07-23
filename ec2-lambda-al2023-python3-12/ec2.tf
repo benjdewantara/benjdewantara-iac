@@ -64,7 +64,6 @@ data "aws_ami" "amazon-linux-2023" {
 }
 
 resource "aws_instance" "this" {
-
   ami                         = data.aws_ami.amazon-linux-2023.id
   instance_type               = "t3.micro"
   associate_public_ip_address = true
@@ -72,4 +71,8 @@ resource "aws_instance" "this" {
   security_groups = [aws_security_group.this.id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
 
+  tags = {
+    Name    = "ec2-${local.friendlyname}"
+    iacpath = "ec2-lambda-al2023-python3-12/ec2.tf"
+  }
 }
