@@ -85,4 +85,14 @@ resource "aws_instance" "this" {
     Name    = "ec2-${local.friendlyname}"
     iacpath = "ec2-lambda-al2023-python3-12/ec2.tf"
   }
+
+  lifecycle {
+    create_before_destroy = true
+
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      # security_groups,
+    ]
+  }
 }
