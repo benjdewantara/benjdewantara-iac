@@ -26,4 +26,4 @@ pip install docker
 
 cd $HOME || exit
 zip $project_name.zip -r $project_name
-aws s3 cp ./$project_name "${s3_uri_dump_results_trimmed}/$project_name"
+aws s3 cp ./$project_name.zip "${s3_uri_dump_results_trimmed}/$project_name.zip"

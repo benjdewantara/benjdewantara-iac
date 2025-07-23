@@ -32,6 +32,12 @@ resource "aws_iam_role_policy" "this" {
           "Effect" : "Allow",
           "Action" : "s3:*",
           "Resource" : "*"
+        },
+        {
+          "Sid" : "AllowKMS",
+          "Effect" : "Allow",
+          "Action" : "kms:*",
+          "Resource" : "*"
         }
       ]
     }
