@@ -10,7 +10,7 @@ resource "aws_vpc" "this" {
 
   tags = {
     Name    = "vpc-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -23,7 +23,7 @@ resource "aws_subnet" "aza_apps" {
 
   tags = {
     Name    = "subnet-aza-app-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -37,7 +37,7 @@ resource "aws_subnet" "aza_web" {
 
   tags = {
     Name    = "subnet-aza-web-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -50,7 +50,7 @@ resource "aws_subnet" "azb_apps" {
 
   tags = {
     Name    = "subnet-azb-app-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_subnet" "azb_web" {
 
   tags = {
     Name    = "subnet-azb-web-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -77,7 +77,7 @@ resource "aws_subnet" "azc_apps" {
 
   tags = {
     Name    = "subnet-azc-app-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_subnet" "azc_web" {
 
   tags = {
     Name    = "subnet-azc-web-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -100,7 +100,7 @@ resource "aws_internet_gateway" "this" {
 
   tags = {
     Name    = "igw-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 
@@ -114,7 +114,7 @@ resource "aws_route_table" "this" {
 
   tags = {
     Name    = "rtb-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/main.tf"
+    iacpath = "ec2-nodejs-hello-world-server/main.tf"
   }
 }
 

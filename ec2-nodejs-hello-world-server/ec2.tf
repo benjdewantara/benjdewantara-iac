@@ -90,7 +90,7 @@ resource "aws_instance" "this" {
 
   tags = {
     Name    = "ec2-${local.friendlyname}"
-    iacpath = "ec2-lambda-al2023-python3-12/ec2.tf"
+    iacpath = "ec2-nodejs-hello-world-server/ec2.tf"
   }
 
   lifecycle {
