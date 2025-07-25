@@ -17,9 +17,9 @@ yum install -y git
 yum install -y nodejs
 
 cd /home/ec2-user
-git clone --branch '${git_branch}' '${git_repo_url}'
+git clone --branch '${git_branch}' '${git_repo_url}' ./project_app
 
-NODE_APP_FULLFILEPATH=`find . -maxdepth 2 -type f -iregex .*package.json | head -n 1`
+NODE_APP_FULLFILEPATH=`find ./project_app -maxdepth 2 -type f -iregex .*package.json | head -n 1`
 NODE_APP_DIR=`dirname $NODE_APP_FULLFILEPATH`
 cd $NODE_APP_DIR
 

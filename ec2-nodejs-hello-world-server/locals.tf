@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 locals {
-  friendlyname = "bnj-nodejs-selfstudy"
+  friendlyname = "bnj-nodejs-selftutorial"
 
   s3_uri_dump_results = ""
   s3_uri_dump_results_trimmed = trim(local.s3_uri_dump_results, "/")
