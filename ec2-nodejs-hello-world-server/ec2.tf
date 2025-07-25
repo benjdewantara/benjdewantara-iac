@@ -75,6 +75,8 @@ data "template_file" "user_data" {
   vars = {
     # still nothing for now
     s3_uri_dump_results_trimmed = local.s3_uri_dump_results_trimmed
+    git_repo_url                = local.git_repo_url
+    git_branch                  = local.git_branch
   }
 }
 

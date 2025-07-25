@@ -13,7 +13,17 @@ echo "This is the start of ec2-nodejs-hello-world-server/user_data_template.sh"
 #cd $HOME || exit
 
 yum update -y
+yum install -y git
 yum install -y nodejs
+
+cd /home/ec2-user
+git clone --branch '${git_branch}' '${git_repo_url}'
+
+NODE_APP_FULLFILEPATH=`find . -maxdepth 2 -type f -iregex .*package.json | head -n 1`
+NODE_APP_DIR=`dirname $NODE_APP_FULLFILEPATH`
+cd $NODE_APP_DIR
+
+#npm run start
 
 #export NVM_DIR="/home/ec2-user/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
