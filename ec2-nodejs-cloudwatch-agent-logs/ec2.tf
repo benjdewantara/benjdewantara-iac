@@ -1,5 +1,5 @@
 resource "aws_iam_role" "this" {
-  name = "${local.friendlyname}"
+  name = local.friendlyname
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -20,13 +20,19 @@ resource "aws_iam_role" "this" {
 }
 
 resource "aws_iam_role_policy" "this" {
-  name = "${local.friendlyname}"
+  name = local.friendlyname
   role = aws_iam_role.this.name
 
   policy = jsonencode(
     {
       "Version" : "2012-10-17",
       "Statement" : [
+        {
+          "Sid" : "AllowEC2",
+          "Effect" : "Allow",
+          "Action" : "ec2:*",
+          "Resource" : "*"
+        },
         {
           "Sid" : "AllowS3",
           "Effect" : "Allow",
@@ -38,14 +44,32 @@ resource "aws_iam_role_policy" "this" {
           "Effect" : "Allow",
           "Action" : "kms:*",
           "Resource" : "*"
-        }
+        },
+        {
+          "Sid" : "AllowSSM",
+          "Effect" : "Allow",
+          "Action" : "ssm:*",
+          "Resource" : "*"
+        },
+        {
+          "Sid" : "AllowCloudWatchLogs",
+          "Effect" : "Allow",
+          "Action" : "logs:*",
+          "Resource" : "*"
+        },
+        {
+          "Sid" : "AllowCloudWatch",
+          "Effect" : "Allow",
+          "Action" : "cloudwatch:*",
+          "Resource" : "*"
+        },
       ]
     }
   )
 }
 
 resource "aws_iam_instance_profile" "this" {
-  name = "${local.friendlyname}"
+  name = local.friendlyname
   role = aws_iam_role.this.name
 }
 
@@ -75,6 +99,7 @@ data "template_file" "user_data" {
   vars = {
     # still nothing for now
     s3_uri_dump_results_trimmed = local.s3_uri_dump_results_trimmed
+    cwagent_config_json         = file("${path.module}/cwagent-config.json")
   }
 }
 
