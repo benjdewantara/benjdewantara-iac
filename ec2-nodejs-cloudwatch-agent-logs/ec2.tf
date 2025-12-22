@@ -98,8 +98,8 @@ data "template_file" "user_data" {
 
   vars = {
     # still nothing for now
-    s3_uri_dump_results_trimmed = local.s3_uri_dump_results_trimmed
-    cwagent_config_json         = file("${path.module}/cwagent-config.json")
+    s3_uri_dump_results_trimmed   = local.s3_uri_dump_results_trimmed
+    user_data_cwagent_config_json = file("${path.module}/user_data_cwagent_config.json")
   }
 }
 
