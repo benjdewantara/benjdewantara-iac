@@ -4,3 +4,9 @@
   if you want to find out 
   why the `CWAgent` namespace 
   is not created yet on AWS Console - CloudWatch 
+1. Certain permissions from these two (possibly three) 
+  may be needed:
+    - EC2 (ec2:*)
+    - CloudWatch (cloudwatch:*)
+    - CloudWatchLogs (logs:*)
+
