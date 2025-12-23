@@ -37,5 +37,18 @@
         "service_address": ":8125"
       }
     }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/home/benj/wkwk.log",
+            "log_group_name": "benj_log_group_name_1",
+            "log_stream_name": "benj_log_stream_name_1"
+          }
+        ]
+      }
+    }
   }
 }
