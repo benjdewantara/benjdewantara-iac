@@ -19,4 +19,42 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
   -m ec2 -s \
   -c file:$filepath_user_data_cwagent_config_json
 
+filename_shell_script="benj-shell-app-01a.sh"
+filename_service_unit="benj-svc-01a.service"
+
+cat <<EOF >/home/ec2-user/$filename_shell_script
+#!/bin/bash
+while [[ 1 ]];
+do
+  d="\$(date --rfc-email)";
+  echo "Hello world at \$d " >> /var/log/app.log;
+  sleep 3;
+done;
+EOF
+
+chmod +x /home/ec2-user/$filename_shell_script
+
+cat <<EOF >/home/ec2-user/$filename_service_unit
+# Copyright Benyamin Manullang. All Rights Reserved.
+
+[Unit]
+Description=Benj test
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ec2-user/$filename_shell_script
+KillMode=process
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sed -i /home/ec2-user/$filename_service_unit -E -e " s/%%filename_shell_script%%/$filename_shell_script/ "
+
+systemctl enable /home/ec2-user/$filename_service_unit
+systemctl start $filename_service_unit
+
 echo "This is the end of ./ec2-nodejs-cloudwatch-agent-logs/locals.tf"

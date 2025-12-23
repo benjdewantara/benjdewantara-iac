@@ -103,6 +103,12 @@ data "template_file" "user_data" {
   }
 }
 
+resource "random_string" "this" {
+  length  = 4
+  lower   = false
+  special = false
+}
+
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.amazon-linux-2023.id
   instance_type               = "t3.micro"
@@ -114,7 +120,7 @@ resource "aws_instance" "this" {
   user_data = data.template_file.user_data.rendered
 
   tags = {
-    Name    = "ec2-${local.friendlyname}"
+    Name    = "${local.friendlyname}-${random_string.this.result}"
     iacpath = join("/", [local.iacpath_parent, "ec2.tf"])
   }
 
