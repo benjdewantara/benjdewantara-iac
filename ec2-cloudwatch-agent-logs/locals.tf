@@ -4,8 +4,8 @@ provider "aws" {
 }
 
 locals {
-  friendlyname                = "nodejs-cloudwatch-agent-logs"
+  friendlyname                = "ec2-cloudwatch-agent-logs"
   s3_uri_dump_results         = ""
   s3_uri_dump_results_trimmed = trim(local.s3_uri_dump_results, "/")
-  iacpath_parent              = "ec2-nodejs-cloudwatch-agent-logs"
+  iacpath_parent              = "ec2-cloudwatch-agent-logs"
 }
