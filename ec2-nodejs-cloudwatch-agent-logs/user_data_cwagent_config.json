@@ -4,7 +4,11 @@
     "run_as_user": "cwagent"
   },
   "metrics": {
-    "aggregation_dimensions": [["InstanceId"]],
+    "aggregation_dimensions": [
+      [
+        "InstanceId"
+      ]
+    ],
     "append_dimensions": {
       "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
       "ImageId": "${aws:ImageId}",
@@ -13,12 +17,18 @@
     },
     "metrics_collected": {
       "disk": {
-        "measurement": ["used_percent"],
+        "measurement": [
+          "used_percent"
+        ],
         "metrics_collection_interval": 60,
-        "resources": ["*"]
+        "resources": [
+          "*"
+        ]
       },
       "mem": {
-        "measurement": ["mem_used_percent"],
+        "measurement": [
+          "mem_used_percent"
+        ],
         "metrics_collection_interval": 60
       },
       "statsd": {
