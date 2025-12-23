@@ -9,4 +9,5 @@
     - EC2 (ec2:*)
     - CloudWatch (cloudwatch:*)
     - CloudWatchLogs (logs:*)
+1. CloudWatch agent cannot read a file within `/home/ec2-user` directory
 
