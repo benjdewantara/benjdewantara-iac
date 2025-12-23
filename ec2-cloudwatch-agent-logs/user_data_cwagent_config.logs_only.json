@@ -12,7 +12,8 @@
           {
             "file_path": "/var/log/app.log",
             "log_group_name": "benj_log_group_name_4",
-            "log_stream_name": "benj_log_stream_name_4"
+            "log_stream_name": "benj_log_stream_name_4/{instance_id}",
+            "retention_in_days": 3
           }
         ]
       }
