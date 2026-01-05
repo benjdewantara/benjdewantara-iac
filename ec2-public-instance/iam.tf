@@ -51,13 +51,6 @@ module "iam_role" {
           ]
         }
       ]
-      # condition = [
-      #   {
-      #     test     = "StringEquals"
-      #     variable = "sts:ExternalId"
-      #     values   = ["some-secret-id"]
-      #   }
-      # ]
     }
   }
 
