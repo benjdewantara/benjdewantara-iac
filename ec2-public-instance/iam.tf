@@ -10,43 +10,16 @@ module "iam_policy" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "AllowEC2",
-          "Effect" : "Allow",
-          "Action" : "ec2:*",
-          "Resource" : "*"
-        },
-        # {
-        #   "Sid" : "AllowS3",
-        #   "Effect" : "Allow",
-        #   "Action" : "s3:*",
-        #   "Resource" : "*"
-        # },
-        # {
-        #   "Sid" : "AllowKMS",
-        #   "Effect" : "Allow",
-        #   "Action" : "kms:*",
-        #   "Resource" : "*"
-        # },
-        {
-          "Sid" : "AllowSSM",
+          "Sid" : "AllowCloudWatchAgentWizard",
           "Effect" : "Allow",
           "Action" : [
+            "cloudwatch:*",
+            "ec2:*",
             "ec2messages:*",
+            "logs:*",
             "ssm:*",
             "ssmmessages:*"
           ],
-          "Resource" : "*"
-        },
-        {
-          "Sid" : "AllowCloudWatchLogs",
-          "Effect" : "Allow",
-          "Action" : "logs:*",
-          "Resource" : "*"
-        },
-        {
-          "Sid" : "AllowCloudWatch",
-          "Effect" : "Allow",
-          "Action" : "cloudwatch:*",
           "Resource" : "*"
         },
       ]
