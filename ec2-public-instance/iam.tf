@@ -30,21 +30,25 @@ module "iam_policy" {
         {
           "Sid" : "AllowSSM",
           "Effect" : "Allow",
-          "Action" : "ssm:*",
+          "Action" : [
+            "ec2messages:*",
+            "ssm:*",
+            "ssmmessages:*"
+          ],
           "Resource" : "*"
         },
-        # {
-        #   "Sid" : "AllowCloudWatchLogs",
-        #   "Effect" : "Allow",
-        #   "Action" : "logs:*",
-        #   "Resource" : "*"
-        # },
-        # {
-        #   "Sid" : "AllowCloudWatch",
-        #   "Effect" : "Allow",
-        #   "Action" : "cloudwatch:*",
-        #   "Resource" : "*"
-        # },
+        {
+          "Sid" : "AllowCloudWatchLogs",
+          "Effect" : "Allow",
+          "Action" : "logs:*",
+          "Resource" : "*"
+        },
+        {
+          "Sid" : "AllowCloudWatch",
+          "Effect" : "Allow",
+          "Action" : "cloudwatch:*",
+          "Resource" : "*"
+        },
       ]
     }
   )
