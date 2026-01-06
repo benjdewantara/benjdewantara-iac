@@ -3,7 +3,7 @@ module "iam_policy" {
 
   name        = local.projectname
   path        = "/"
-  description = "My example policy"
+  description = "IAM Policy for ${local.projectname}}"
 
   policy = jsonencode(
     {
@@ -13,12 +13,35 @@ module "iam_policy" {
           "Sid" : "AllowCloudWatchAgentConfigurerWizard",
           "Effect" : "Allow",
           "Action" : [
-            "cloudwatch:*",
-            "ec2:*",
-            "ec2messages:*",
-            "logs:*",
-            "ssm:*",
-            "ssmmessages:*"
+            "cloudwatch:PutMetricData",
+            "ec2:DescribeTags",
+            "ec2:DescribeVolumes",
+            "ec2messages:AcknowledgeMessage",
+            "ec2messages:DeleteMessage",
+            "ec2messages:FailMessage",
+            "ec2messages:GetEndpoint",
+            "ec2messages:GetMessages",
+            "ec2messages:SendReply",
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:DescribeLogGroups",
+            "logs:DescribeLogStreams",
+            "logs:PutLogEvents",
+            "ssm:DescribeAssociation",
+            "ssm:DescribeDocument",
+            "ssm:GetDeployablePatchSnapshotForInstance",
+            "ssm:GetDocument",
+            "ssm:GetManifest",
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:ListAssociations",
+            "ssm:ListInstanceAssociations",
+            "ssm:PutComplianceItems",
+            "ssm:PutConfigurePackageResult",
+            "ssm:PutInventory",
+            "ssm:UpdateAssociationStatus",
+            "ssm:UpdateInstanceAssociationStatus",
+            "ssm:UpdateInstanceInformation",
           ],
           "Resource" : "*"
         },

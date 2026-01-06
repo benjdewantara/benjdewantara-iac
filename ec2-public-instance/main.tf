@@ -15,3 +15,18 @@ locals {
 
   s3_bucket_name = local.projectname
 }
+
+locals {
+  ec2_instance_name = "${local.projectname}-${random_string.this.result}"
+  time_now          = timestamp()
+}
+
+# this recreates resource random_string each time `terraform apply` occurs
+resource "random_string" "this" {
+  keepers = { marker = local.time_now }
+
+  length    = 4
+  lower     = true
+  min_lower = 4
+  special   = false
+}

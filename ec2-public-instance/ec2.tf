@@ -1,18 +1,3 @@
-locals {
-  ec2_instance_name = "${local.projectname}-${random_string.this.result}"
-  time_now          = timestamp()
-}
-
-# this recreates resource random_string each time `terraform apply` occcurs
-resource "random_string" "this" {
-  keepers = { marker = local.time_now }
-
-  length    = 4
-  lower     = true
-  min_lower = 4
-  special   = false
-}
-
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
 

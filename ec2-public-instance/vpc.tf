@@ -7,7 +7,7 @@ module "vpc" {
 
   azs = local.azs
   # intra_subnets  = [for i in range(0, 0 + 3) : local.cidrs_subnet[i]]
-  private_subnets = [for i in range(0, 0 + 3) : local.cidrs_subnet[i]]
+  # private_subnets = [for i in range(0, 0 + 3) : local.cidrs_subnet[i]]
   public_subnets  = [for i in range(3, 3 + 3) : local.cidrs_subnet[i]]
 
   create_igw = true
