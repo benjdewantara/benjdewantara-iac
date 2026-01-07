@@ -13,7 +13,8 @@ locals {
   cidrs_subnet = [for k, v in range(2 * length(local.azs)) : cidrsubnet(local.cidr_vpc, 3, k)]
   create_vpc   = true
 
-  s3_bucket_name = local.projectname
+  uri_app_repository = ""
+  s3_bucket_name     = local.projectname
 }
 
 locals {
