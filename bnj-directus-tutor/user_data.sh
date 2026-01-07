@@ -40,4 +40,17 @@ install_node_npm_as_ec2user() {
 
 install_node_npm_as_ec2user
 
+install_followup_docker() {
+  usermod -a -G docker ec2-user
+
+  # bash-completion for docker
+  curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
+
+  systemctl start docker
+  systemctl enable docker.service
+  systemctl enable containerd.service
+}
+
+install_followup_docker
+
 echo "This is the end of bnj-directus-tutor\user_data.sh"
