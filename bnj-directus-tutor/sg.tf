@@ -26,6 +26,26 @@ module "sg_this" {
     },
   ]
 
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Allow all outgoing IPv4"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
+  egress_with_ipv6_cidr_blocks = [
+    {
+      from_port        = 0
+      to_port          = 0
+      protocol         = -1
+      description      = "Allow all outgoing IPv6"
+      ipv6_cidr_blocks = "::/0"
+    },
+  ]
+
   tags = {
     iacpath = "bnj-directus-tutor/sg.tf"
   }
