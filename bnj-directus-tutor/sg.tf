@@ -1,9 +1,10 @@
-module "web_server_sg" {
+module "sg_this" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = local.projectname
-  description = "Security group sample"
-  vpc_id      = module.vpc.vpc_id
+  name            = local.projectname
+  description     = "Security group sample"
+  vpc_id          = module.vpc.vpc_id
+  use_name_prefix = false
 
   ingress_with_cidr_blocks = [
     {
@@ -24,4 +25,8 @@ module "web_server_sg" {
       ipv6_cidr_blocks = "::/0"
     },
   ]
+
+  tags = {
+    iacpath = "bnj-directus-tutor/sg.tf"
+  }
 }

@@ -17,34 +17,13 @@ module "ec2_this" {
 
   name = local.ec2_instance_name
 
-  create_security_group          = true
-  security_group_name            = local.ec2_instance_name
-  security_group_use_name_prefix = false
-
-  security_group_ingress_rules = {
-    1 = {
-      cidr_ipv4 = "0.0.0.0/0",
-      # cidr_ipv6   = "::/0"
-      description = "Allow incoming all",
-      # from_port   = 0,
-      ip_protocol = "-1",
-      # to_port     = 0,
-
-      tags = {
-        iacpath = "bnj-directus-tutor/ec2.tf"
-      },
-    }
-  }
-
+  vpc_security_group_ids      = [module.sg_this.security_group_id]
+  create_security_group       = false
   associate_public_ip_address = true
-
-  instance_type = "t3.micro"
-
-  subnet_id = local.create_vpc ? module.vpc.public_subnets[0] : ""
-
-  user_data_base64 = base64encode(data.template_file.user_data.rendered)
-
-  iam_instance_profile = module.iam_role.instance_profile_name
+  instance_type               = "t3.micro"
+  subnet_id                   = local.create_vpc ? module.vpc.public_subnets[0] : ""
+  user_data_base64            = base64encode(data.template_file.user_data.rendered)
+  iam_instance_profile        = module.iam_role.instance_profile_name
 
   tags = {
     iacpath = "bnj-directus-tutor/ec2.tf"
