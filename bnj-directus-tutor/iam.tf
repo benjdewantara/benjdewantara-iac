@@ -78,7 +78,7 @@ module "iam_role" {
   }
 
   policies = {
-    custom123 = module.iam_policy.arn
+    a1 = module.iam_policy.arn
   }
 
   tags = {

@@ -4,6 +4,7 @@ data "template_file" "user_data" {
   vars = {
     # user_data_cwagent_config_json = file("${path.module}/user_data_cwagent_config.json")
     user_data_cwagent_config_json = ""
+    uri_app_repository            = local.uri_app_repository
   }
 }
 
