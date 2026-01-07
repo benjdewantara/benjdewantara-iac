@@ -40,6 +40,15 @@ install_node_npm_as_ec2user() {
 
 install_node_npm_as_ec2user
 
+install_followup_docker_compose() {
+  DOCKER_CONFIG="/usr/libexec/docker"
+  mkdir -p $DOCKER_CONFIG/cli-plugins
+  curl -SL https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+}
+
+install_followup_docker_compose
+
 install_followup_docker() {
   usermod -a -G docker ec2-user
 
