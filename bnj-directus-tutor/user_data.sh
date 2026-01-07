@@ -7,6 +7,10 @@ yum update -y
 yum install -y amazon-cloudwatch-agent
 yum install -y docker
 yum install -y git
+yum install -y nc
+# thanks to https://unix.stackexchange.com/a/249495/186480
+# use `yum list` to discover the exact `postgresql16.x86_64`
+yum install -y postgresql16.x86_64
 
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
