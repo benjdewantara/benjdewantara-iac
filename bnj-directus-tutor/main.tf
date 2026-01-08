@@ -16,7 +16,8 @@ locals {
   uri_app_repository = "https://TOKEN_HERE@github.com/benjdewantara/bnj-directus-tutor.git"
   s3_bucket_name     = local.projectname
 
-  zone_id = ""
+  zone_id             = ""
+  app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
 }
 
 locals {

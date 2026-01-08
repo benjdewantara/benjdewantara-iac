@@ -5,7 +5,7 @@ data "template_file" "user_data" {
     # user_data_cwagent_config_json = file("${path.module}/user_data_cwagent_config.json")
     user_data_cwagent_config_json = ""
     uri_app_repository            = local.uri_app_repository
-    app_domain                    = aws_route53_record.this.name
+    app_domain                    = local.app_domain
   }
 }
 

@@ -3,7 +3,7 @@ data "aws_route53_zone" "this" {
 }
 
 resource "aws_route53_record" "this" {
-  name    = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
+  name    = local.app_domain
   type    = "CNAME"
   zone_id = data.aws_route53_zone.this.zone_id
   ttl     = 300
