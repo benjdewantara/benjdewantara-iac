@@ -76,10 +76,10 @@ replace_localhost_with_app_domain() {
   [[ -z $app_domain ]] && echo "app_domain is not set, will not perform replacement" && return
 
   local f="$dir_directus/.env"
-  sed -i "$f" -E -e " /PUBLIC_URL=/! b ; s/localhost/$app_domain/ "
-  sed -i "$f" -E -e " /REFRESH_TOKEN_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/ "
-  sed -i "$f" -E -e " /SESSION_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/ "
-  sed -i "$f" -E -e " /CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC=/! b ; s/localhost/$app_domain/ "
+  sed -i "$f" -E -e " /PUBLIC_URL=/! b ; s/localhost/$app_domain/g "
+  sed -i "$f" -E -e " /REFRESH_TOKEN_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/g "
+  sed -i "$f" -E -e " /SESSION_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/g "
+  sed -i "$f" -E -e " /CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC=/! b ; s/localhost/$app_domain/g "
 }
 replace_localhost_with_app_domain
 
