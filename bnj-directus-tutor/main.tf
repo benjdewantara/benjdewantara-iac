@@ -15,6 +15,8 @@ locals {
 
   uri_app_repository = "https://TOKEN_HERE@github.com/benjdewantara/bnj-directus-tutor.git"
   s3_bucket_name     = local.projectname
+
+  zone_id = ""
 }
 
 locals {
