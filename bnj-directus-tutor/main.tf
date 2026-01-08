@@ -33,3 +33,7 @@ resource "random_string" "this" {
   min_lower = 4
   special   = false
 }
+
+output "app_domain" {
+  value = aws_route53_record.this.records
+}
