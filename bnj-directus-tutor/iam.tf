@@ -79,6 +79,7 @@ module "iam_role" {
 
   policies = {
     a1 = module.iam_policy.arn
+    a2 = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   }
 
   tags = {
