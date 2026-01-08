@@ -35,5 +35,5 @@ resource "random_string" "this" {
 }
 
 output "app_domain" {
-  value = aws_route53_record.this.records
+  value = aws_route53_record.this.name
 }
