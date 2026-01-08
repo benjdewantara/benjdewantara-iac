@@ -67,5 +67,6 @@ install_followup_docker() {
 install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
+chown -R ec2-user: /home/ec2-user/app
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"
