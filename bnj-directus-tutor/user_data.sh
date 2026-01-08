@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+app_domain='${app_domain}'
+
 echo "This is the start of bnj-directus-tutor\user_data.sh"
 
 set -x
@@ -41,7 +43,6 @@ install_node_npm_as_ec2user() {
   dir_bin_node=$(find /home/ec2-user/.nvm/ -type d -iregex ".*versions.*bin" | head -n 1)
   echo "export PATH=\$PATH:$dir_bin_node" >>/home/ec2-user/.bashrc
 }
-
 install_node_npm_as_ec2user
 
 install_followup_docker_compose() {
@@ -50,7 +51,6 @@ install_followup_docker_compose() {
   curl -SL https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
   chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 }
-
 install_followup_docker_compose
 
 install_followup_docker() {
@@ -63,13 +63,29 @@ install_followup_docker() {
   systemctl enable docker.service
   systemctl enable containerd.service
 }
-
 install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
 chown -R ec2-user: /home/ec2-user/app
+
+dir_current=$(realpath .)
 dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
+
+replace_localhost_with_app_domain() {
+  echo "Will replace_localhost_with_app_domain"
+  [[ -z $app_domain ]] && echo "app_domain is not set, will not perform replacement" && return
+
+  local f="$dir_directus/.env"
+  sed -i "$f" -E -e " /PUBLIC_URL=/! b ; s/localhost/$app_domain/ "
+  sed -i "$f" -E -e " /REFRESH_TOKEN_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/ "
+  sed -i "$f" -E -e " /SESSION_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/ "
+  sed -i "$f" -E -e " /CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC=/! b ; s/localhost/$app_domain/ "
+}
+replace_localhost_with_app_domain
+
 echo "Will do 'docker compose up' on $dir_directus"
-cd $dir_directus && docker compose up -d
+cd "$dir_directus" && docker compose up -d
+# shellcheck disable=SC2164
+cd "$dir_current"
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"
