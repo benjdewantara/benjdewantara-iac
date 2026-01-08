@@ -68,5 +68,8 @@ install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
 chown -R ec2-user: /home/ec2-user/app
+dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
+echo "Will do 'docker compose up' on $dir_directus"
+cd $dir_directus && docker compose up -d
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"

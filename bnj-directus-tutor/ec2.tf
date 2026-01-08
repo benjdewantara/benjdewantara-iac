@@ -21,7 +21,7 @@ module "ec2_this" {
   vpc_security_group_ids      = [module.sg_this.security_group_id]
   create_security_group       = false
   associate_public_ip_address = true
-  instance_type               = "t3.medium"
+  instance_type               = "t3.small"
   subnet_id                   = local.create_vpc ? module.vpc.public_subnets[0] : ""
   user_data_base64            = base64encode(data.template_file.user_data.rendered)
   iam_instance_profile        = module.iam_role.instance_profile_name
