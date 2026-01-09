@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 app_domain='${app_domain}'
+github_pat='${github_pat}'
+
+if [[ -n $github_pat ]]; then
+  mkdir -p '/home/ec2-user'
+  echo "export github_pat=$github_pat" >>/home/ec2-user/.bashrc
+  chown -R ec2-user: '/home/ec2-user'
+fi
 
 echo "This is the start of bnj-directus-tutor\user_data.sh"
 
