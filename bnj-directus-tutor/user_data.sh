@@ -92,6 +92,7 @@ chown -R ec2-user: /home/ec2-user/app
 
 dir_current=$(realpath .)
 dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
+dir_frontend=$(find '/home/ec2-user/app' -type d -iregex '.*nextjs' | head -n 1)
 
 replace_localhost_with_app_domain() {
   echo "Will replace_localhost_with_app_domain"
@@ -102,6 +103,10 @@ replace_localhost_with_app_domain() {
   sed -i "$f" -E -e " /REFRESH_TOKEN_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/g "
   sed -i "$f" -E -e " /SESSION_COOKIE_DOMAIN=/! b ; s/localhost/$app_domain/g "
   sed -i "$f" -E -e " /CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC=/! b ; s/localhost/$app_domain/g "
+
+  local f="$dir_frontend/.env"
+  sed -i "$f" -E -e " /NEXT_PUBLIC_DIRECTUS_URL=/! b ; s/localhost/$app_domain/g "
+  sed -i "$f" -E -e " /NEXT_PUBLIC_SITE_URL=/! b ; s/localhost/$app_domain/g "
 }
 replace_localhost_with_app_domain
 
