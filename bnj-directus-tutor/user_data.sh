@@ -116,7 +116,8 @@ adjust_personal_prefs() {
   echo 'set completion-ignore-case On' >>$dir_home/.inputrc
   echo 'alias ll="ls -tral"' >>$dir_home/.bashrc
 
-  chown -R ec2-user: $dir_home
+  chown -R ec2-user: $dir_home/.inputrc
+  chown -R ec2-user: $dir_home/.bashrc
 }
 adjust_personal_prefs
 
