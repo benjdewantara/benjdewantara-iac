@@ -52,6 +52,12 @@ install_pnpm() {
   curl -fsSL https://get.pnpm.io/install.sh | sh -
   #  source /home/ec2-user/.bashrc
 
+  local dir_pnpm='/home/ec2-user/.local/share/pnpm'
+  mkdir -p $dir_pnpm
+  cp -r '/root/.local/share/pnpm' $dir_pnpm
+  chown -R ec2-user: $dir_pnpm
+  echo "export PATH=\$PATH:$dir_pnpm" >>/home/ec2-user/.bashrc
+
   echo "Finished install_pnpm"
 }
 install_pnpm
