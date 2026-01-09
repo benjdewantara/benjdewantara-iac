@@ -21,13 +21,6 @@ yum install -y nc
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
-adjust_personal_prefs() {
-  local dir_home="/home/ec2-user"
-  echo 'set completion-ignore-case On' >>$dir_home/.inputrc
-  chown -R ec2-user: $dir_home
-}
-adjust_personal_prefs
-
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
 
@@ -62,9 +55,7 @@ install_node_npm_as_ec2user
 install_pnpm() {
   echo "Will install_pnpm"
 
-  #  source /home/ec2-user/.bashrc
   curl -fsSL https://get.pnpm.io/install.sh | sh -
-  #  source /home/ec2-user/.bashrc
 
   local dir_pnpm='/home/ec2-user/.local/share/pnpm'
   mkdir -p $dir_pnpm
@@ -118,5 +109,15 @@ echo "Will do 'docker compose up' on $dir_directus"
 cd "$dir_directus" && docker compose up -d
 # shellcheck disable=SC2164
 cd "$dir_current"
+
+adjust_personal_prefs() {
+  local dir_home="/home/ec2-user"
+
+  echo 'set completion-ignore-case On' >>$dir_home/.inputrc
+  echo 'alias ll="ls -tral"' >>$dir_home/.bashrc
+
+  chown -R ec2-user: $dir_home
+}
+adjust_personal_prefs
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"
