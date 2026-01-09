@@ -45,6 +45,17 @@ install_node_npm_as_ec2user() {
 }
 install_node_npm_as_ec2user
 
+install_pnpm() {
+  echo "Will install_pnpm"
+
+  #  source /home/ec2-user/.bashrc
+  curl -fsSL https://get.pnpm.io/install.sh | sh -
+  #  source /home/ec2-user/.bashrc
+
+  echo "Finished install_pnpm"
+}
+install_pnpm
+
 install_followup_docker_compose() {
   DOCKER_CONFIG="/usr/libexec/docker"
   mkdir -p $DOCKER_CONFIG/cli-plugins
