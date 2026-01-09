@@ -54,8 +54,8 @@ install_pnpm() {
 
   local dir_pnpm='/home/ec2-user/.local/share/pnpm'
   mkdir -p $dir_pnpm
-  cp -r '/root/.local/share/pnpm/*' $dir_pnpm
-  chown -R ec2-user: $dir_pnpm
+  cp -r '/root/.local/share/pnpm/'* $dir_pnpm
+  chown -R ec2-user: '/home/ec2-user/.local'
   echo "export PATH=\$PATH:$dir_pnpm" >>/home/ec2-user/.bashrc
 
   echo "Finished install_pnpm"
