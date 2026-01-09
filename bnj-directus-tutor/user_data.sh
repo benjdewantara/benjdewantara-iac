@@ -21,6 +21,13 @@ yum install -y nc
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
+adjust_personal_prefs() {
+  local dir_home="/home/ec2-user"
+  echo 'set completion-ignore-case On' >>$dir_home/.inputrc
+  chown -R ec2-user: $dir_home
+}
+adjust_personal_prefs
+
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
 
