@@ -26,10 +26,7 @@ install_cloudwatch_agent() {
 
   # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
   local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
-
-  cat <<EOF >$filepath_user_data_cwagent_config_json
-${user_data_cwagent_config_json}
-EOF
+  echo '${user_data_cwagent_config_json_base64}' | base64 --decode >"$filepath_user_data_cwagent_config_json"
 
   # read https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/start-CloudWatch-Agent-on-premise-SSM-onprem.html
   sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \

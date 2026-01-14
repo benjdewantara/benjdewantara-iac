@@ -1,12 +1,23 @@
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "2.5.3"
+    }
+  }
+}
+data "local_file" "cw_config_json" {
+  filename = "${path.module}/user_data_cwagent_config.all_mem_all_cpu.json"
+}
+
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
 
   vars = {
-    # user_data_cwagent_config_json = ""
-    user_data_cwagent_config_json = file("${path.module}/user_data_cwagent_config.all_mem_all_cpu.json")
-    uri_app_repository            = local.uri_app_repository
-    app_domain                    = local.app_domain
-    github_pat                    = local.github_pat
+    user_data_cwagent_config_json_base64 = data.local_file.cw_config_json.content_base64
+    uri_app_repository                   = local.uri_app_repository
+    app_domain                           = local.app_domain
+    github_pat                           = local.github_pat
   }
 }
 
