@@ -21,6 +21,21 @@ yum install -y nc
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
+install_cloudwatch_agent() {
+  # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
+  local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
+
+  cat <<EOF >$filepath_user_data_cwagent_config_json
+${user_data_cwagent_config_json}
+EOF
+
+  # read https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/start-CloudWatch-Agent-on-premise-SSM-onprem.html
+  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config \
+    -m ec2 -s \
+    -c file:$filepath_user_data_cwagent_config_json
+}
+
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
 
