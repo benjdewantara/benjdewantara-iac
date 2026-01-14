@@ -77,6 +77,50 @@ EOF
 }
 create_dummy_service_unit
 
+setup_logfrom_jctl() {
+  local service_unit_name="benj-svc-01a.service"
+  local app_log_filepath="/var/log/app.log"
+
+  local logfrom_jctl_dir="/home/ec2-user/.logfrom_jctl"
+  local logfrom_jctl_service_unit_name="logfrom_jctl.service"
+  local logfrom_jctl_service_unit_file="$logfrom_jctl_dir/$logfrom_jctl_service_unit_name"
+  local logfrom_jctl_script="$logfrom_jctl_dir/logfrom_jctl.sh"
+
+  cat <<EOF >$logfrom_jctl_script
+#!/bin/bash
+while [[ 1 ]];
+do
+  rm $app_log_filepath
+  journalctl -u $service_unit_name --cursor-file '$logfrom_jctl_dir/$service_unit_name.cursor' > $app_log_filepath
+  sleep 10;
+done;
+EOF
+
+  chmod +x $logfrom_jctl_script
+
+  cat <<EOF >$logfrom_jctl_service_unit_file
+# Copyright Benyamin Manullang. All Rights Reserved.
+
+[Unit]
+Description=logfrom_jctl that creates log textfiles from given by journalctl
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=$logfrom_jctl_script
+KillMode=process
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl enable $logfrom_jctl_service_unit_file
+  systemctl start $logfrom_jctl_service_unit_name
+}
+setup_logfrom_jctl
+
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
 
