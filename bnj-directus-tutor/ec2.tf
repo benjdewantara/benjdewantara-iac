@@ -1,12 +1,16 @@
-data "local_file" "cw_config_json" {
-  filename = "${path.module}/user_data_cwagent_config.json"
+data "template_file" "cw_config_json" {
+  template = file("${path.module}/user_data_cwagent_config.json")
+
+  vars = {
+    tf_projectname = local.projectname
+  }
 }
 
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
 
   vars = {
-    user_data_cwagent_config_json_base64 = data.local_file.cw_config_json.content_base64
+    user_data_cwagent_config_json_base64 = base64encode(data.template_file.cw_config_json.rendered)
     uri_app_repository                   = local.uri_app_repository
     app_domain                           = local.app_domain
     github_pat                           = local.github_pat
