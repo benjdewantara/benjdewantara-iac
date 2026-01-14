@@ -22,6 +22,8 @@ yum install -y nc
 yum install -y postgresql16.x86_64
 
 install_cloudwatch_agent() {
+  echo "Will install_cloudwatch_agent"
+
   # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
   local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
 
@@ -35,6 +37,7 @@ EOF
     -m ec2 -s \
     -c file:$filepath_user_data_cwagent_config_json
 }
+install_cloudwatch_agent
 
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
