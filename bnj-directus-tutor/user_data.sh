@@ -86,6 +86,8 @@ setup_logfrom_jctl() {
   local logfrom_jctl_service_unit_file="$logfrom_jctl_dir/$logfrom_jctl_service_unit_name"
   local logfrom_jctl_script="$logfrom_jctl_dir/logfrom_jctl.sh"
 
+  mkdir -p $logfrom_jctl_dir
+
   cat <<EOF >$logfrom_jctl_script
 #!/bin/bash
 rm $app_log_filepath
@@ -113,6 +115,8 @@ EOF
 
   systemctl enable $logfrom_jctl_service_unit_file
   systemctl start $logfrom_jctl_service_unit_name
+
+  chown -R ec2-user $logfrom_jctl_dir
 }
 setup_logfrom_jctl
 
