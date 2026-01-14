@@ -77,8 +77,8 @@ EOF
 }
 create_dummy_service_unit
 
-setup_logfrom_jctl() {
-  local service_unit_name_target="benj-svc-01a.service"
+logfrom_jctl() {
+  local service_unit_name_target=$1
   local app_log_filepath="/var/log/app-$service_unit_name_target.log"
 
   local logfrom_jctl_dir="/home/ec2-user/.logfrom_jctl"
@@ -118,7 +118,7 @@ EOF
 
   chown -R ec2-user $logfrom_jctl_dir
 }
-setup_logfrom_jctl
+logfrom_jctl "benj-svc-01a.service"
 
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit
