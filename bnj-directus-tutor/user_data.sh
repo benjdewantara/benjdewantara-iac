@@ -24,6 +24,8 @@ yum install -y postgresql16.x86_64
 install_cloudwatch_agent() {
   echo "Will install_cloudwatch_agent"
 
+  yum install -y amazon-cloudwatch-agent
+
   # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
   local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
   echo '${user_data_cwagent_config_json_base64}' | base64 --decode >"$filepath_user_data_cwagent_config_json"
@@ -35,6 +37,45 @@ install_cloudwatch_agent() {
     -c file:$filepath_user_data_cwagent_config_json
 }
 install_cloudwatch_agent
+
+create_dummy_service_unit() {
+  local filename_shell_script="benj-shell-app-01a.sh"
+  local filename_service_unit="benj-svc-01a.service"
+
+  cat <<EOF >/home/ec2-user/$filename_shell_script
+#!/bin/bash
+while [[ 1 ]];
+do
+  d="\$(date --rfc-email)";
+  echo "Hello world at \$d " >> /var/log/app.log;
+  sleep 11;
+done;
+EOF
+
+  chmod +x /home/ec2-user/$filename_shell_script
+
+  cat <<EOF >/home/ec2-user/$filename_service_unit
+# Copyright Benyamin Manullang. All Rights Reserved.
+
+[Unit]
+Description=Benj test
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ec2-user/$filename_shell_script
+KillMode=process
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl enable /home/ec2-user/$filename_service_unit
+  systemctl start $filename_service_unit
+}
+create_dummy_service_unit
 
 install_node_npm_as_ec2user() {
   cd /home/ec2-user || exit

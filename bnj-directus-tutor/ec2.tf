@@ -1,5 +1,5 @@
 data "local_file" "cw_config_json" {
-  filename = "${path.module}/user_data_cwagent_config.all_mem_all_cpu.json"
+  filename = "${path.module}/user_data_cwagent_config.json"
 }
 
 data "template_file" "user_data" {
