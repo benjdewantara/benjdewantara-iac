@@ -79,10 +79,11 @@ create_dummy_service_unit
 
 logfrom_jctl() {
   local service_unit_name_target=$1
+  service_unit_name_target=$${service_unit_name_target%.service}
   local app_log_filepath="/var/log/app-$service_unit_name_target.log"
 
   local logfrom_jctl_dir="/home/ec2-user/.logfrom_jctl"
-  local logfrom_jctl_service_unit_name="logfrom_jctl.service"
+  local logfrom_jctl_service_unit_name="logfrom_jctl-$service_unit_name_target.service"
   local logfrom_jctl_service_unit_file="$logfrom_jctl_dir/$logfrom_jctl_service_unit_name"
   local logfrom_jctl_script="$logfrom_jctl_dir/logfrom_jctl.sh"
 
