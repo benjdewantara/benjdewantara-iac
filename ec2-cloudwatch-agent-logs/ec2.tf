@@ -93,13 +93,18 @@ data "aws_ami" "amazon-linux-2023" {
   }
 }
 
+data "local_file" "cw_config_json" {
+  filename = "${path.module}/user_data_cwagent_config.json"
+}
+
 data "template_file" "user_data" {
   template = file("${path.module}/user_data_template.sh")
 
   vars = {
     # still nothing for now
-    s3_uri_dump_results_trimmed   = local.s3_uri_dump_results_trimmed
-    user_data_cwagent_config_json = file("${path.module}/user_data_cwagent_config.json")
+    user_data_cwagent_config_json_base64 = data.local_file.cw_config_json.content_base64
+    s3_uri_dump_results_trimmed          = local.s3_uri_dump_results_trimmed
+    user_data_cwagent_config_json        = file("${path.module}/user_data_cwagent_config.json")
   }
 }
 

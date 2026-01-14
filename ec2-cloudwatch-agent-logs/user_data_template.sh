@@ -9,15 +9,20 @@ whoami
 yum update -y
 yum install -y amazon-cloudwatch-agent
 
-# The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
-filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
-echo '${user_data_cwagent_config_json}' >$filepath_user_data_cwagent_config_json
+install_cloudwatch_agent() {
+  echo "Will install_cloudwatch_agent"
 
-# read https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/start-CloudWatch-Agent-on-premise-SSM-onprem.html
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-  -a fetch-config \
-  -m ec2 -s \
-  -c file:$filepath_user_data_cwagent_config_json
+  # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
+  local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
+  echo '${user_data_cwagent_config_json_base64}' | base64 --decode >"$filepath_user_data_cwagent_config_json"
+
+  # read https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/start-CloudWatch-Agent-on-premise-SSM-onprem.html
+  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config \
+    -m ec2 -s \
+    -c file:$filepath_user_data_cwagent_config_json
+}
+install_cloudwatch_agent
 
 filename_shell_script="benj-shell-app-01a.sh"
 filename_service_unit="benj-svc-01a.service"
