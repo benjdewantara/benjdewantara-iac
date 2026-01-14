@@ -90,8 +90,7 @@ logfrom_jctl() {
 
   cat <<EOF >$logfrom_jctl_script
 #!/bin/bash
-rm $app_log_filepath
-journalctl -u $service_unit_name_target --cursor-file '$logfrom_jctl_dir/$service_unit_name_target.cursor' > $app_log_filepath
+journalctl -u $service_unit_name_target --cursor-file '$logfrom_jctl_dir/$service_unit_name_target.cursor' >> $app_log_filepath
 EOF
 
   chmod +x $logfrom_jctl_script
