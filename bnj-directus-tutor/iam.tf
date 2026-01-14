@@ -42,6 +42,10 @@ module "iam_policy" {
             "ssm:UpdateAssociationStatus",
             "ssm:UpdateInstanceAssociationStatus",
             "ssm:UpdateInstanceInformation",
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel",
           ],
           "Resource" : "*"
         },
