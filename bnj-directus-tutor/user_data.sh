@@ -47,7 +47,7 @@ create_dummy_service_unit() {
 while [[ 1 ]];
 do
   d="\$(date --rfc-email)";
-  echo "Hello world at \$d " >> /var/log/app.log;
+  echo "Hello world at \$d ";
   sleep 11;
 done;
 EOF
