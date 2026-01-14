@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 echo "This is the start of ./ec2-nodejs-cloudwatch-agent-logs/locals.tf"
 
