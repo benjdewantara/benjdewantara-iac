@@ -78,8 +78,8 @@ EOF
 create_dummy_service_unit
 
 setup_logfrom_jctl() {
-  local service_unit_name="benj-svc-01a.service"
-  local app_log_filepath="/var/log/app.log"
+  local service_unit_name_target="benj-svc-01a.service"
+  local app_log_filepath="/var/log/app-$service_unit_name_target.log"
 
   local logfrom_jctl_dir="/home/ec2-user/.logfrom_jctl"
   local logfrom_jctl_service_unit_name="logfrom_jctl.service"
@@ -91,7 +91,7 @@ setup_logfrom_jctl() {
   cat <<EOF >$logfrom_jctl_script
 #!/bin/bash
 rm $app_log_filepath
-journalctl -u $service_unit_name --cursor-file '$logfrom_jctl_dir/$service_unit_name.cursor' > $app_log_filepath
+journalctl -u $service_unit_name_target --cursor-file '$logfrom_jctl_dir/$service_unit_name_target.cursor' > $app_log_filepath
 EOF
 
   chmod +x $logfrom_jctl_script
