@@ -3,6 +3,15 @@ provider "aws" {
   region  = "ap-southeast-1"
 }
 
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "2.5.3"
+    }
+  }
+}
+
 data "aws_availability_zones" "available" {}
 
 locals {

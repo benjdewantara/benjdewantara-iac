@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    local = {
-      source  = "hashicorp/local"
-      version = "2.5.3"
-    }
-  }
-}
 data "local_file" "cw_config_json" {
   filename = "${path.module}/user_data_cwagent_config.all_mem_all_cpu.json"
 }
