@@ -88,12 +88,8 @@ setup_logfrom_jctl() {
 
   cat <<EOF >$logfrom_jctl_script
 #!/bin/bash
-while [[ 1 ]];
-do
-  rm $app_log_filepath
-  journalctl -u $service_unit_name --cursor-file '$logfrom_jctl_dir/$service_unit_name.cursor' > $app_log_filepath
-  sleep 10;
-done;
+rm $app_log_filepath
+journalctl -u $service_unit_name --cursor-file '$logfrom_jctl_dir/$service_unit_name.cursor' > $app_log_filepath
 EOF
 
   chmod +x $logfrom_jctl_script
@@ -108,9 +104,8 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=$logfrom_jctl_script
-KillMode=process
-Restart=on-failure
-RestartSec=60s
+Restart=always
+RestartSec=15
 
 [Install]
 WantedBy=multi-user.target
