@@ -85,7 +85,7 @@ logfrom_jctl() {
   local logfrom_jctl_dir="/home/ec2-user/.logfrom_jctl"
   local logfrom_jctl_service_unit_name="logfrom_jctl-$service_unit_name_target.service"
   local logfrom_jctl_service_unit_file="$logfrom_jctl_dir/$logfrom_jctl_service_unit_name"
-  local logfrom_jctl_script="$logfrom_jctl_dir/logfrom_jctl.sh"
+  local logfrom_jctl_script="$logfrom_jctl_dir/logfrom_jctl-$service_unit_name_target.sh"
 
   mkdir -p $logfrom_jctl_dir
 
