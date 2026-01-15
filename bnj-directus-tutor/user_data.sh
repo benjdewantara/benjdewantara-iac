@@ -187,8 +187,8 @@ install_followup_docker() {
 install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
-git clone '${uri_app_repository}' /home/ec2-user/
-chown -R ec2-user: /home/ec2-user/app
+cd /home/ec2-user && git clone '${uri_app_repository}'
+chown -R ec2-user: /home/ec2-user
 
 dir_current=$(realpath .)
 dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
