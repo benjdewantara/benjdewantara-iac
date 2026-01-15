@@ -187,6 +187,7 @@ install_followup_docker() {
 install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
+git clone '${uri_app_repository}' /home/ec2-user/
 chown -R ec2-user: /home/ec2-user/app
 
 dir_current=$(realpath .)
