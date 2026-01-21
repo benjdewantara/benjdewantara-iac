@@ -21,37 +21,18 @@ yum install -y nc
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
-install_cloudwatch_agent() {
-  echo "Will install_cloudwatch_agent"
-
-  yum install -y amazon-cloudwatch-agent
-
-  # The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.
-  local filepath_user_data_cwagent_config_json="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
-  echo '${user_data_cwagent_config_json_base64}' | base64 --decode >"$filepath_user_data_cwagent_config_json"
-
-  # read https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/start-CloudWatch-Agent-on-premise-SSM-onprem.html
-  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-    -a fetch-config \
-    -m ec2 -s \
-    -c file:$filepath_user_data_cwagent_config_json
-}
-install_cloudwatch_agent
-
 create_dummy_service_unit() {
-  local filename_shell_script="benj-shell-app-01a.sh"
-  local filename_service_unit="benj-svc-01a.service"
+  local filename_shell_script="bnj-directus-frontend-plain-html.sh"
+  local filename_service_unit="bnj-directus-frontend-plain-html.service"
 
   cat <<EOF >/home/ec2-user/$filename_shell_script
 #!/bin/bash
-while [[ 1 ]];
-do
-  d="\$(date --rfc-email)";
-  echo "Hello world at \$d ";
-  sleep 11;
+while [[ 1 ]]; do
+  /home/ec2-user/app/plain/server.sh | nc -l 0.0.0.0 3000;
 done;
 EOF
 
+  chmod +x /home/ec2-user/app/plain/server.sh
   chmod +x /home/ec2-user/$filename_shell_script
 
   cat <<EOF >/home/ec2-user/$filename_service_unit
@@ -65,8 +46,10 @@ After=network.target
 Type=simple
 ExecStart=/home/ec2-user/$filename_shell_script
 KillMode=process
-Restart=on-failure
-RestartSec=60s
+Restart=always
+Environment="SERVER_DIR=/home/ec2-user/app/plain"
+WorkingDirectory=/home/ec2-user/app/plain
+RestartSec=15s
 
 [Install]
 WantedBy=multi-user.target
@@ -189,6 +172,7 @@ install_followup_docker
 git clone '${uri_app_repository}' /home/ec2-user/app
 cd /home/ec2-user && git clone '${uri_app_repository}'
 chown -R ec2-user: /home/ec2-user
+find /home/ec2-user/app -type f -iregex '.*.sh' -exec chmod +x {} \;
 
 dir_current=$(realpath .)
 dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
