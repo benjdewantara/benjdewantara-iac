@@ -189,8 +189,8 @@ chown -R ec2-user: /home/ec2-user
 find /home/ec2-user/app -type f -iregex '.*.sh' -exec chmod +x {} \;
 
 dir_current=$(realpath .)
-dir_directus=$(find '/home/ec2-user/app' -type d -name '.*directus' | head -n 1)
-dir_frontend=$(find '/home/ec2-user/app' -type d -name '.*nextjs' | head -n 1)
+dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
+dir_frontend=$(find '/home/ec2-user/app' -type d -iregex '.*nextjs' | head -n 1)
 
 replace_localhost_with_app_domain() {
   echo "Will replace_localhost_with_app_domain"
