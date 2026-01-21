@@ -210,4 +210,12 @@ adjust_personal_prefs() {
 }
 adjust_personal_prefs
 
+replace_texts_in_plain() {
+  while IFS= read -r -d '' file; do
+    # shellcheck disable=SC2016
+    sed -i $file -E -e ' s/%APP_URI%/http://${app_domain}:8055/g '
+  done < <(find mydir -mtime -7 -name '*.html' -print0)
+}
+replace_texts_in_plain
+
 echo "This is the end of bnj-directus-tutor\user_data.sh"
