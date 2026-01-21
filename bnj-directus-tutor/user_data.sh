@@ -211,10 +211,15 @@ adjust_personal_prefs() {
 adjust_personal_prefs
 
 replace_texts_in_plain() {
+  set -x
+
   while IFS= read -r -d '' file; do
     # shellcheck disable=SC2016
+    echo "Will replace $file"
     sed -i $file -E -e ' s/%APP_URI%/http:\/\/${app_domain}:8055/g '
   done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
+
+  set +x
 }
 replace_texts_in_plain
 
