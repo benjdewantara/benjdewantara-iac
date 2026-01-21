@@ -171,12 +171,26 @@ install_followup_docker
 
 git clone '${uri_app_repository}' /home/ec2-user/app
 cd /home/ec2-user && git clone '${uri_app_repository}'
+
+replace_texts_in_plain() {
+  set -x
+
+  while IFS= read -r -d '' file; do
+    # shellcheck disable=SC2016
+    echo "Will replace $file"
+    sed -i $file -E -e ' s/%APP_URI%/http:\/\/${app_domain}:8055/g '
+  done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
+
+  set +x
+}
+replace_texts_in_plain
+
 chown -R ec2-user: /home/ec2-user
 find /home/ec2-user/app -type f -iregex '.*.sh' -exec chmod +x {} \;
 
 dir_current=$(realpath .)
-dir_directus=$(find '/home/ec2-user/app' -type d -iregex '.*directus' | head -n 1)
-dir_frontend=$(find '/home/ec2-user/app' -type d -iregex '.*nextjs' | head -n 1)
+dir_directus=$(find '/home/ec2-user/app' -type d -name '.*directus' | head -n 1)
+dir_frontend=$(find '/home/ec2-user/app' -type d -name '.*nextjs' | head -n 1)
 
 replace_localhost_with_app_domain() {
   echo "Will replace_localhost_with_app_domain"
@@ -209,18 +223,5 @@ adjust_personal_prefs() {
   chown -R ec2-user: $dir_home/.bashrc
 }
 adjust_personal_prefs
-
-replace_texts_in_plain() {
-  set -x
-
-  while IFS= read -r -d '' file; do
-    # shellcheck disable=SC2016
-    echo "Will replace $file"
-    sed -i $file -E -e ' s/%APP_URI%/http:\/\/${app_domain}:8055/g '
-  done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
-
-  set +x
-}
-replace_texts_in_plain
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"
