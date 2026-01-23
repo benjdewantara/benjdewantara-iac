@@ -6,12 +6,6 @@ github_pat='${github_pat}'
 app_uri="http://$app_domain:8055"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
-if [[ -n $github_pat ]]; then
-  mkdir -p '/home/ec2-user'
-  echo "export github_pat=$github_pat" >>/home/ec2-user/.bashrc
-  chown -R ec2-user: '/home/ec2-user'
-fi
-
 echo "This is the start of bnj-directus-tutor\user_data.sh"
 
 set -x
@@ -173,11 +167,9 @@ install_followup_docker() {
 }
 install_followup_docker
 
-git clone '${uri_app_repository}' /home/ec2-user/app
-cd /home/ec2-user && git clone '${uri_app_repository}'
-
-replace_texts_in_plain() {
-  set -x
+clone_app_repository() {
+  git clone '${uri_app_repository}' /home/ec2-user/app
+  # cd /home/ec2-user && git clone '${uri_app_repository}'
 
   while IFS= read -r -d '' file; do
     # shellcheck disable=SC2016
@@ -185,18 +177,16 @@ replace_texts_in_plain() {
     sed -i $file -E -e "s/%APP_URI%/$app_uri_backslash_escaped/g"
   done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
 
-  set +x
+  chown -R ec2-user: /home/ec2-user
+  find /home/ec2-user/app -type f -name '*.sh' -exec chmod +x {} \;
 }
-replace_texts_in_plain
-
-chown -R ec2-user: /home/ec2-user
-find /home/ec2-user/app -type f -name '*.sh' -exec chmod +x {} \;
-
-dir_current=$(realpath .)
-dir_directus=$(find '/home/ec2-user/app' -type d -name '*directus' | head -n 1)
-dir_frontend=$(find '/home/ec2-user/app' -type d -name '*nextjs' | head -n 1)
+clone_app_repository
 
 replace_localhost_with_app_domain() {
+  dir_current=$(realpath .)
+  dir_directus=$(find '/home/ec2-user/app' -type d -name '*directus' | head -n 1)
+  dir_frontend=$(find '/home/ec2-user/app' -type d -name '*nextjs' | head -n 1)
+
   echo "Will replace_localhost_with_app_domain"
   [[ -z $app_domain ]] && echo "app_domain is not set, will not perform replacement" && return
 
@@ -209,16 +199,22 @@ replace_localhost_with_app_domain() {
   local f="$dir_frontend/.env"
   sed -i "$f" -E -e " /NEXT_PUBLIC_DIRECTUS_URL=/! b ; s/localhost/$app_domain/g "
   sed -i "$f" -E -e " /NEXT_PUBLIC_SITE_URL=/! b ; s/localhost/$app_domain/g "
+
+  echo "Will do 'docker compose up' on $dir_directus"
+  cd "$dir_directus" && docker compose up -d
+  # shellcheck disable=SC2164
+  cd "$dir_current"
 }
 replace_localhost_with_app_domain
 
-echo "Will do 'docker compose up' on $dir_directus"
-cd "$dir_directus" && docker compose up -d
-# shellcheck disable=SC2164
-cd "$dir_current"
-
 adjust_personal_prefs() {
   local dir_home="/home/ec2-user"
+
+  if [[ -n $github_pat ]]; then
+    mkdir -p "$dir_home"
+    echo "export github_pat=$github_pat" >>$dir_home/.bashrc
+    chown -R ec2-user $dir_home/.bashrc
+  fi
 
   echo 'set completion-ignore-case On' >>$dir_home/.inputrc
   echo 'alias ll="ls -tral"' >>$dir_home/.bashrc
