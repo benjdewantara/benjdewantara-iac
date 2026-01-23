@@ -240,7 +240,10 @@ wait_until_port_8055_listens() {
 wait_until_port_8055_listens
 
 force_directus_admin_to_have_static_token() {
-  local response, access_token, headerAuth, guidAdmin
+  local response
+  local access_token
+  local headerAuth
+  local guidAdmin
 
   response=$(
     curl 'http://localhost:8055/auth/login' \
