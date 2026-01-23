@@ -3,6 +3,9 @@
 app_domain='${app_domain}'
 github_pat='${github_pat}'
 
+app_uri="http://$app_domain:8055"
+app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ' )
+
 if [[ -n $github_pat ]]; then
   mkdir -p '/home/ec2-user'
   echo "export github_pat=$github_pat" >>/home/ec2-user/.bashrc
@@ -178,7 +181,7 @@ replace_texts_in_plain() {
   while IFS= read -r -d '' file; do
     # shellcheck disable=SC2016
     echo "Will replace $file"
-    sed -i $file -E -e ' s/%APP_URI%/http:\/\/${app_domain}:8055/g '
+    sed -i $file -E -e "s/%APP_URI%/$app_uri_backslash_escaped/g"
   done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
 
   set +x
