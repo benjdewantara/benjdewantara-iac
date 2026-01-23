@@ -4,7 +4,7 @@ app_domain='${app_domain}'
 github_pat='${github_pat}'
 
 app_uri="http://$app_domain:8055"
-app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ' )
+app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
 if [[ -n $github_pat ]]; then
   mkdir -p '/home/ec2-user'
@@ -20,6 +20,7 @@ yum install -y amazon-cloudwatch-agent
 yum install -y docker
 yum install -y git
 yum install -y nc
+yum install -y jq
 # thanks to https://unix.stackexchange.com/a/249495/186480
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
@@ -31,7 +32,7 @@ create_dummy_service_unit() {
   cat <<EOF >/home/ec2-user/$filename_shell_script
 #!/bin/bash
 while [[ 1 ]]; do
-  /home/ec2-user/app/plain/server.sh | nc -l 0.0.0.0 3000;
+  /home/ec2-user/app/plain/server.sh | nc -l 0.0.0.0 3000
 done;
 EOF
 
@@ -226,5 +227,46 @@ adjust_personal_prefs() {
   chown -R ec2-user: $dir_home/.bashrc
 }
 adjust_personal_prefs
+
+wait_until_port_8055_listens() {
+  while "true"; do
+    success=""
+    echo -e | nc localhost 8055 >/dev/null && success="yes"
+    [[ -z $success ]] || break
+    echo "Cannot detect a working localhost port 8055 yet. Will sleep for 5 seconds"
+    sleep 5
+  done
+}
+wait_until_port_8055_listens
+
+force_directus_admin_to_have_static_token() {
+  local response, access_token, headerAuth, guidAdmin
+
+  response=$(
+    curl 'http://localhost:8055/auth/login' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      --data-raw '{"email":"admin@example.com","password":"admin1234"}'
+  )
+  access_token=$(echo $response | sed -E -e ' s/.+access_token":"([^"]+)".+/\1/ ')
+  [[ -z $access_token ]] && echo "Cannot determine static access_token of admin user guid" && exit 1
+
+  headerAuth="Authorization: Bearer $access_token"
+
+  response=$(
+    curl 'http://localhost:8055/users/me?fields=id' \
+      -X GET \
+      -H "$headerAuth"
+  )
+  guidAdmin=$(echo $response | jq -r .data.id)
+  [[ -z $guidAdmin ]] && echo "Cannot determine directus admin user guid" && exit 1
+
+  curl "http://localhost:8055/users/$guidAdmin" \
+    -X PATCH \
+    -H 'Content-Type: application/json' \
+    -H "$headerAuth" \
+    --data-raw '{"token":"UaTM1wd2Hpp7ho0SlU-azDaxoYjNcq0r"}'
+}
+force_directus_admin_to_have_static_token
 
 echo "This is the end of bnj-directus-tutor\user_data.sh"
