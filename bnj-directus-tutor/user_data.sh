@@ -232,6 +232,8 @@ wait_until_port_8055_listens() {
     echo "Cannot detect a working localhost port 8055 yet. Will sleep for 5 seconds"
     sleep 5
   done
+
+  sleep 15
 }
 wait_until_port_8055_listens
 
