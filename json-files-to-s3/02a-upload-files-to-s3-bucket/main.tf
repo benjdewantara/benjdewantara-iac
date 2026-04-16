@@ -9,7 +9,6 @@ terraform {
 variable "s3_bucket" {
   type        = string
   description = "S3 bucket to upload files to"
-  default     = "N/A#!@#"
 }
 
 data "aws_s3_bucket" "this" {
@@ -17,7 +16,7 @@ data "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_object" "this" {
-  bucket  = var.s3_bucket
+  bucket  = data.aws_s3_bucket.this.bucket
   key     = "something.txt"
   content = "something"
 }

@@ -7,11 +7,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  profile = "benj"
-  region  = "ap-southeast-1"
-}
-
 resource "random_string" "this" {
   length    = 8
   lower     = true
