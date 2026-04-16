@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "6.36.0"
-    }
-  }
-}
 variable "s3_bucket" {
   type        = string
   description = "S3 bucket to upload files to"
