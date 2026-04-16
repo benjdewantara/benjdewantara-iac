@@ -16,7 +16,22 @@ data "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_object" "this" {
-  bucket  = data.aws_s3_bucket.this.bucket
-  key     = "something.txt"
-  content = "something"
+  for_each = fileset("${path.module}/files_template", "*")
+
+  bucket       = data.aws_s3_bucket.this.bucket
+  content_type = "text/plain"
+  key          = "files_template/${each.key}"
+  source       = "${path.module}/files_template/${each.key}"
+}
+
+locals {
+  f = fileset("${path.module}/files_template", "*")
+
+  a26 = {
+    hell = "worl"
+  }
+}
+
+output "filepaths" {
+  value = local.a26
 }
