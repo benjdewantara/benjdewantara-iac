@@ -8,12 +8,13 @@ data "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_object" "this" {
-  for_each = fileset("${path.module}/files_template", "*")
+  for_each = fileset("${path.module}/files_template", "*json")
 
   bucket       = data.aws_s3_bucket.this.bucket
   content_type = "text/plain"
   key          = "files_template/${each.key}"
   source       = "${path.module}/files_template/${each.key}"
+  etag         = filemd5("${path.module}/files_template/${each.key}")
 }
 
 locals {
