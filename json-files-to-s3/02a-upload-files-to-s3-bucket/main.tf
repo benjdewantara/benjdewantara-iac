@@ -17,7 +17,6 @@ locals {
 
 resource "aws_s3_object" "this" {
   for_each = local.fileset_to_upload
-  # for_each = toset([])
 
   bucket       = data.aws_s3_bucket.this.bucket
   content_type = "text/plain"
