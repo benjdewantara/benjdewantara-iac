@@ -13,7 +13,7 @@ locals {
   cidrs_subnet = [for k, v in range(2 * length(local.azs)) : cidrsubnet(local.cidr_vpc, 3, k)]
   create_vpc   = true
 
-  github_pat         = ""
+  github_pat         = var.github_pat
   uri_app_repository = "https://${local.github_pat}@github.com/benjdewantara/bnj-golang-gin-tutor.git"
   s3_bucket_name     = local.projectname
 
