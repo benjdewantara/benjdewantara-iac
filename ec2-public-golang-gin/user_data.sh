@@ -6,7 +6,7 @@ github_pat='${github_pat}'
 app_uri="http://$app_domain:8055"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
-echo "This is the start of bnj-directus-tutor\user_data.sh"
+echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
 
 set -x
 yum update -y
@@ -199,4 +199,4 @@ adjust_personal_prefs() {
 }
 adjust_personal_prefs
 
-echo "This is the end of bnj-directus-tutor\user_data.sh"
+echo "This is the end of bnj-golang-gin-tutor\user_data.sh"
