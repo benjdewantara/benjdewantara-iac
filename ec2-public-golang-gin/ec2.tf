@@ -27,7 +27,7 @@ module "ec2_this" {
 
   name = local.ec2_instance_name
 
-  vpc_security_group_ids      = [module.sg_this.security_group_id]
+  vpc_security_group_ids      = [module.sg_this.id]
   create_security_group       = false
   associate_public_ip_address = true
   instance_type               = "t3.small"
