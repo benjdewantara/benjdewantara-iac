@@ -15,7 +15,7 @@ terraform {
 data "aws_availability_zones" "available" {}
 
 locals {
-  projectname = "bnj-directus-tutor"
+  projectname = "bnj-golang-gin-tutor"
 
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
   cidr_vpc     = "10.0.0.0/24"

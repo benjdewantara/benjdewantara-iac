@@ -47,6 +47,6 @@ module "sg_this" {
   ]
 
   tags = {
-    iacpath = "bnj-directus-tutor/sg.tf"
+    iacpath = "bnj-golang-gin-tutor/sg.tf"
   }
 }

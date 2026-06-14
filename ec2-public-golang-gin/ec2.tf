@@ -36,7 +36,7 @@ module "ec2_this" {
   iam_instance_profile        = module.iam_role.instance_profile_name
 
   tags = {
-    iacpath    = "bnj-directus-tutor/ec2.tf"
+    iacpath    = "bnj-golang-gin-tutor/ec2.tf"
     app_domain = local.app_domain
   }
 }

@@ -15,6 +15,6 @@ module "vpc" {
   manage_default_security_group = false
 
   tags = {
-    iacpath = "bnj-directus-tutor/vpc.tf"
+    iacpath = "bnj-golang-gin-tutor/vpc.tf"
   }
 }
