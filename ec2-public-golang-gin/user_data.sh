@@ -10,6 +10,7 @@ app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
 
 set -x
+export GOPATH=/app
 yum update -y
 yum install -y amazon-cloudwatch-agent
 yum install -y docker
@@ -46,6 +47,7 @@ ExecStart=/home/ec2-user/$filename_shell_script
 KillMode=process
 Restart=always
 Environment="SERVER_DIR=/home/ec2-user/app/plain"
+Environment=GOPATH=/app
 Environment=PORT=8081
 WorkingDirectory=/home/ec2-user/app/plain
 RestartSec=15s
@@ -116,6 +118,12 @@ clone_app_repository() {
   find /home/ec2-user/app -type f -name '*.sh' -exec chmod +x {} \;
 }
 clone_app_repository
+
+go_build() {
+  cd /home/ec2-user/app || exit
+  go build .
+}
+go_build
 
 adjust_personal_prefs() {
   local dir_home="/home/ec2-user"
