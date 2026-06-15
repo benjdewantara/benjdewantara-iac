@@ -8,6 +8,7 @@ app_uri="http://$app_domain:8080"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
 gopath_user="/home/ec2-user/go"
+go_executables_built_recently="/home/ec2-user/go_executables_built_recently"
 
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
 
@@ -122,13 +123,22 @@ clone_app_repository() {
 clone_app_repository
 
 go_build() {
+  export GOPATH=$gopath_user
+  local cursor_tmp_filename='.cursor.tmp'
+
   cd $gopath_user || exit
   shopt -s globstar
   for f in ./*/**mod; do
     # shellcheck disable=SC2046
     cd $(dirname $f) || continue
-    go build .
+    touch $cursor_tmp_filename
+    go build -buildvcs=false .
+    executable_filename=$(find . -type f -executable -newer $cursor_tmp_filename)
+    realpath "$executable_filename" >>$go_executables_built_recently
+    rm $cursor_tmp_filename
   done
+
+  unset GOPATH
 }
 go_build
 
