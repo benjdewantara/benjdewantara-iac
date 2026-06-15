@@ -9,6 +9,7 @@ app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
 gopath_user="/home/ec2-user/go"
 gocache_user="/home/ec2-user/.cache/go-build"
+dummy_service_unit_file="/home/ec2-user/dummy.service"
 go_executables_built_recently="/home/ec2-user/go_executables_built_recently"
 
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
@@ -25,19 +26,8 @@ yum install -y go
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
-create_dummy_service_unit() {
-  local filename_shell_script="$projectname.sh"
-  local filename_service_unit="$projectname.service"
-
-  cat <<EOF >/home/ec2-user/$filename_shell_script
-#!/bin/bash
-cd /home/ec2-user/app && go run .
-EOF
-
-  chmod +x /home/ec2-user/app/plain/server.sh
-  chmod +x /home/ec2-user/$filename_shell_script
-
-  cat <<EOF >/home/ec2-user/$filename_service_unit
+create_dummy_service_unit_file() {
+  cat <<EOF >$dummy_service_unit_file
 # Copyright Benyamin Manullang. All Rights Reserved.
 
 [Unit]
@@ -46,23 +36,17 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/ec2-user/$filename_shell_script
+ExecStart=%ExecStart%
 KillMode=process
 Restart=always
-Environment="SERVER_DIR=/home/ec2-user/app/plain"
-Environment=GOPATH=/app
-Environment=PORT=8081
-WorkingDirectory=/home/ec2-user/app/plain
+Environment=PORT=%PORT%
 RestartSec=15s
 
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  systemctl enable /home/ec2-user/$filename_service_unit
-  systemctl start $filename_service_unit
 }
-create_dummy_service_unit
+create_dummy_service_unit_file
 
 logfrom_jctl() {
   local service_unit_name_target=$1
@@ -144,6 +128,22 @@ go_build() {
   unset GOPATH
 }
 go_build
+
+create_service_files() {
+  local port_number=8080
+
+  while IFS= read -r x_filename; do
+
+    ((port_number++))
+    local service_filename="$x_filename.service"
+    local x_filename_escaped=${x_filename////\\/}
+    cp "$x_filename" "$service_filename"
+    sed -i "$service_filename" -E -e " s/%ExecStart%/$x_filename_escaped/g " -e " s/%PORT%/$port_number/g "
+    chmod +x "$service_filename"
+
+  done <$go_executables_built_recently
+}
+create_service_files
 
 adjust_personal_prefs() {
   local dir_home="/home/ec2-user"
