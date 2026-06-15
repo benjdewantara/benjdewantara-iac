@@ -7,10 +7,11 @@ github_pat='${github_pat}'
 app_uri="http://$app_domain:8080"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
+gopath_user="/home/ec2-user/go"
+
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
 
 set -x
-export GOPATH=/app
 yum update -y
 yum install -y amazon-cloudwatch-agent
 yum install -y docker
@@ -105,8 +106,9 @@ EOF
 logfrom_jctl "benj-svc-01a.service"
 
 clone_app_repository() {
-  git clone '${uri_app_repository}' /home/ec2-user/app
-  # cd /home/ec2-user && git clone '${uri_app_repository}'
+  mkdir -p $gopath_user
+  cd $gopath_user || exit
+  git clone '${uri_app_repository}'
 
   while IFS= read -r -d '' file; do
     # shellcheck disable=SC2016
@@ -120,8 +122,13 @@ clone_app_repository() {
 clone_app_repository
 
 go_build() {
-  cd /home/ec2-user/app || exit
-  go build .
+  cd $gopath_user || exit
+  shopt -s globstar
+  for f in ./*/**mod; do
+    # shellcheck disable=SC2046
+    cd $(dirname $f) || continue
+    go build .
+  done
 }
 go_build
 
