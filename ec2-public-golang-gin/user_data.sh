@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 app_domain='${app_domain}'
+projectname='${projectname}'
 github_pat='${github_pat}'
 
-app_uri="http://$app_domain:8055"
+app_uri="http://$app_domain:8080"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
@@ -15,19 +16,18 @@ yum install -y docker
 yum install -y git
 yum install -y nc
 yum install -y jq
+yum install -y go
 # thanks to https://unix.stackexchange.com/a/249495/186480
 # use `yum list` to discover the exact `postgresql16.x86_64`
 yum install -y postgresql16.x86_64
 
 create_dummy_service_unit() {
-  local filename_shell_script="bnj-directus-frontend-plain-html.sh"
-  local filename_service_unit="bnj-directus-frontend-plain-html.service"
+  local filename_shell_script="$projectname.sh"
+  local filename_service_unit="$projectname.service"
 
   cat <<EOF >/home/ec2-user/$filename_shell_script
 #!/bin/bash
-while [[ 1 ]]; do
-  /home/ec2-user/app/plain/server.sh | nc -l 0.0.0.0 3000
-done;
+cd /home/ec2-user/app && go run .
 EOF
 
   chmod +x /home/ec2-user/app/plain/server.sh
@@ -46,6 +46,7 @@ ExecStart=/home/ec2-user/$filename_shell_script
 KillMode=process
 Restart=always
 Environment="SERVER_DIR=/home/ec2-user/app/plain"
+Environment=PORT=8081
 WorkingDirectory=/home/ec2-user/app/plain
 RestartSec=15s
 
@@ -100,72 +101,6 @@ EOF
   chown -R ec2-user $logfrom_jctl_dir
 }
 logfrom_jctl "benj-svc-01a.service"
-
-install_node_npm_as_ec2user() {
-  cd /home/ec2-user || exit
-
-  # Download and install nvm:
-  set -x
-  export NVM_DIR="/home/ec2-user/.nvm"
-  mkdir -p $NVM_DIR
-  set +x
-
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-  # Download and install Node.js:
-  nvm install 24
-
-  # Verify the Node.js version:
-  node -v
-
-  # Verify npm version:
-  npm -v
-
-  npm install -g npm
-
-  chown -R ec2-user: /home/ec2-user/.nvm
-
-  dir_bin_node=$(find /home/ec2-user/.nvm/ -type d -iregex ".*versions.*bin" | head -n 1)
-  echo "export PATH=\$PATH:$dir_bin_node" >>/home/ec2-user/.bashrc
-}
-install_node_npm_as_ec2user
-
-install_pnpm() {
-  echo "Will install_pnpm"
-
-  curl -fsSL https://get.pnpm.io/install.sh | sh -
-
-  local dir_pnpm='/home/ec2-user/.local/share/pnpm'
-  mkdir -p $dir_pnpm
-  cp -r '/root/.local/share/pnpm/'* '/root/.local/share/pnpm/.'* $dir_pnpm
-  chown -R ec2-user: '/home/ec2-user/.local'
-  echo "export PATH=\$PATH:$dir_pnpm" >>/home/ec2-user/.bashrc
-
-  echo "Finished install_pnpm"
-}
-install_pnpm
-
-install_followup_docker_compose() {
-  DOCKER_CONFIG="/usr/libexec/docker"
-  mkdir -p $DOCKER_CONFIG/cli-plugins
-  curl -SL https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-  chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-}
-install_followup_docker_compose
-
-install_followup_docker() {
-  usermod -a -G docker ec2-user
-
-  # bash-completion for docker
-  curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
-
-  systemctl start docker
-  systemctl enable docker.service
-  systemctl enable containerd.service
-}
-install_followup_docker
 
 clone_app_repository() {
   git clone '${uri_app_repository}' /home/ec2-user/app
