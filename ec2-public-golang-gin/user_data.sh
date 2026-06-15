@@ -136,10 +136,12 @@ create_service_files() {
 
     ((port_number++))
     local service_filename="$x_filename.service"
-    local x_filename_escaped=${x_filename////\\/}
-    cp "$x_filename" "$service_filename"
+    local x_filename_escaped=$${x_filename////\\/}
+    cp "$dummy_service_unit_file" "$service_filename"
     sed -i "$service_filename" -E -e " s/%ExecStart%/$x_filename_escaped/g " -e " s/%PORT%/$port_number/g "
     chmod +x "$service_filename"
+    systemctl enable "$service_filename"
+    systemctl start "$service_filename"
 
   done <$go_executables_built_recently
 }
