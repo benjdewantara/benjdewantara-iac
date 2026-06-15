@@ -116,7 +116,7 @@ go_build() {
   cd $gopath_user || exit
   shopt -s globstar
   for f in ./**/*go.mod; do
-    [[ "${f#./pkg/}" == "$f" ]] || continue
+    [[ "$${f#./pkg/}" == "$f" ]] || continue
     # shellcheck disable=SC2046
     cd $(dirname $f) || continue
     touch $cursor_tmp_filename
