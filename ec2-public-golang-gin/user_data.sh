@@ -8,6 +8,7 @@ app_uri="http://$app_domain:8080"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
 gopath_user="/home/ec2-user/go"
+gocache_user="/home/ec2-user/.cache/go-build"
 go_executables_built_recently="/home/ec2-user/go_executables_built_recently"
 
 echo "This is the start of bnj-golang-gin-tutor\user_data.sh"
@@ -124,6 +125,8 @@ clone_app_repository
 
 go_build() {
   export GOPATH=$gopath_user
+  export GOCACHE=$gocache_user
+
   local cursor_tmp_filename='.cursor.tmp'
 
   cd $gopath_user || exit
