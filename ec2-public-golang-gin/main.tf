@@ -17,8 +17,9 @@ locals {
   uri_app_repository = "https://${local.github_pat}@github.com/benjdewantara/bnj-golang-gin-tutor.git"
   s3_bucket_name     = local.projectname
 
-  zone_id    = ""
-  app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
+  zone_id    = var.zone_id
+  # app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
+  app_domain = "app.${data.aws_route53_zone.this.name}"
 }
 
 locals {
