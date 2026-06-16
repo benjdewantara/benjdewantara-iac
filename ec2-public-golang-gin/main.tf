@@ -6,7 +6,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  projectname = "bnj-golang-gin-tutor"
+  projectname = var.projectname
 
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
   cidr_vpc     = "10.0.0.0/24"
