@@ -54,7 +54,7 @@ module "iam_policy" {
   )
 
   tags = {
-    iacpath = "bnj-golang-gin-tutor/iam.tf"
+    iacpath = "ec2-public-golang-gin/iam.tf"
   }
 }
 
@@ -87,6 +87,6 @@ module "iam_role" {
   }
 
   tags = {
-    iacpath = "bnj-golang-gin-tutor/iam.tf"
+    iacpath = "ec2-public-golang-gin/iam.tf"
   }
 }
