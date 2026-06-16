@@ -1,0 +1,14 @@
+{
+  "github_pat": "",
+  "zone_id": "",
+  "microservice_specs": {
+    "app1": {
+      "name": "",
+      "port": ""
+    },
+    "app2": {
+      "name": "",
+      "port": ""
+    }
+  }
+}
