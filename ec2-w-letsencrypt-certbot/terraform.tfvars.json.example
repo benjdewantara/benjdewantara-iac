@@ -1,0 +1,8 @@
+{
+  "domain_name_public": "",
+  "email_certbot": "",
+  "friendlyname": "",
+  "route53zoneid": "",
+  "s3_bucket_cert_upload": "",
+  "s3_bucket_region": ""
+}
