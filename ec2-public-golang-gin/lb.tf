@@ -45,9 +45,28 @@ resource "aws_lb_listener" "this" {
 
 resource "aws_lb_target_group_attachment" "this" {
   for_each = toset(local.ports_target)
-  # for_each = aws_lb_target_group.this
 
   target_group_arn = aws_lb_target_group.this.arn
   target_id        = module.ec2_this[0].id
   port             = each.value
+}
+
+resource "aws_lb_listener" "this_https" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 443
+  certificate_arn   = module.cert_ap_southeast_1.certificate_arn
+
+  default_action {
+    type = "forward"
+
+    forward {
+      target_group {
+        arn = aws_lb_target_group.this.arn
+      }
+    }
+  }
+
+  tags = {
+    iacpath = "ec2-public-golang-gin/lb.tf"
+  }
 }
