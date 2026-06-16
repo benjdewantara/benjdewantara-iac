@@ -95,15 +95,6 @@ clone_app_repository() {
   mkdir -p $gopath_user
   cd $gopath_user || exit
   git clone '${uri_app_repository}'
-
-  while IFS= read -r -d '' file; do
-    # shellcheck disable=SC2016
-    echo "Will replace $file"
-    sed -i $file -E -e "s/%APP_URI%/$app_uri_backslash_escaped/g"
-  done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
-
-  chown -R ec2-user: /home/ec2-user
-  find /home/ec2-user/app -type f -name '*.sh' -exec chmod +x {} \;
 }
 clone_app_repository
 
@@ -111,19 +102,24 @@ go_build() {
   export GOPATH=$gopath_user
   export GOCACHE=$gocache_user
 
-  local cursor_tmp_filename='.cursor.tmp'
+  local timestamp_marker='.timestamp_marker'
 
   cd $gopath_user || exit
   shopt -s globstar
   for f in ./**/*go.mod; do
     [[ "$${f#./pkg/}" == "$f" ]] || continue
+
     # shellcheck disable=SC2046
+    cd $gopath_user || exit
     cd $(dirname $f) || continue
-    touch $cursor_tmp_filename
+
+    touch $timestamp_marker
+
     go build -buildvcs=false .
-    executable_filename=$(find . -type f -executable -newer $cursor_tmp_filename)
+    executable_filename=$(find . -type f -executable -newer $timestamp_marker)
     realpath "$executable_filename" >>$go_executables_built_recently
-    rm $cursor_tmp_filename
+
+    rm $timestamp_marker
   done
 
   unset GOPATH
