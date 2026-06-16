@@ -123,6 +123,7 @@ go_build() {
   done
 
   unset GOPATH
+  unset GOCACHE
 }
 go_build
 
