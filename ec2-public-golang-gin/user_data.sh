@@ -96,7 +96,22 @@ clone_app_repository() {
   cd $gopath_user || exit
   git clone '${uri_app_repository}'
 }
-clone_app_repository
+clone_app_repository_then_multiply() {
+  mkdir -p $gopath_user
+  cd $gopath_user || exit
+  git clone '${uri_app_repository}' app1
+  cp -r app1 app2
+
+  local port_idx=8080
+  for d in app*; do
+    cd $gopath_user || continue
+    cd "$d" || continue
+    ((port_idx++))
+    sed -i go.mod -E -e " s/firstone/\0$port_idx/ "
+  done
+}
+#clone_app_repository
+clone_app_repository_then_multiply
 
 go_build() {
   export GOPATH=$gopath_user
