@@ -17,7 +17,7 @@ locals {
   uri_app_repository = "https://${local.github_pat}@github.com/benjdewantara/bnj-golang-gin-tutor.git"
   s3_bucket_name     = local.projectname
 
-  zone_id    = var.zone_id
+  zone_id = var.zone_id
   # app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
   app_domain = "app.${data.aws_route53_zone.this.name}"
 }
@@ -25,6 +25,11 @@ locals {
 locals {
   ec2_instance_name = "${local.projectname}-${random_string.this.result}"
   time_now          = timestamp()
+}
+
+# specs
+locals {
+  microservice_specs = tomap(var.microservice_specs)
 }
 
 # this recreates resource random_string each time `terraform apply` occurs

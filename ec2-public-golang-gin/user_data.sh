@@ -108,6 +108,7 @@ clone_app_repository_then_multiply() {
     cd "$d" || continue
     ((port_idx++))
     sed -i go.mod -E -e " s/firstone/\0$port_idx/ "
+    sed -i main.go -E -e " s/(router.+)(albums)/\1api\/$d\/\2/ "
   done
 }
 #clone_app_repository
