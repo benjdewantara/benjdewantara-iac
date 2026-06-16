@@ -21,7 +21,8 @@ data "template_file" "user_data" {
 # inspired by the example on https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest
 # also see https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/blob/master/examples/complete/main.tf
 module "ec2_this" {
-  depends_on = [random_string.this, aws_security_group.this]
+  # depends_on = [random_string.this, aws_security_group.this]
+  depends_on = [aws_security_group.this]
 
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-ec2-instance.git"
   count  = local.create_vpc ? 1 : 0
