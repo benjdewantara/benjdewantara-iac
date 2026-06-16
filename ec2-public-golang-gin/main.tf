@@ -19,7 +19,7 @@ locals {
 
   zone_id = var.zone_id
   # app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
-  app_domain = "app.${data.aws_route53_zone.this.name}"
+  app_domain = "${var.projectname_subdomain}.${data.aws_route53_zone.this.name}"
 }
 
 locals {

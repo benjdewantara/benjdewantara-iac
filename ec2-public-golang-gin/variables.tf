@@ -10,6 +10,10 @@ variable "projectname" {
   type = string
 }
 
+variable "projectname_subdomain" {
+  type = string
+}
+
 variable "zone_id" {
   type = string
 }
