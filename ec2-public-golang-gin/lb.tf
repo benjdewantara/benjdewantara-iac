@@ -9,9 +9,13 @@ resource "aws_lb" "this" {
   }
 }
 
+locals {
+  ports_target = tolist(["8081", "8082"])
+}
+
 resource "aws_lb_target_group" "this" {
   name     = local.projectname
-  port     = 8081
+  port     = 123 # will be overridden anyway when registering a target
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
@@ -25,8 +29,13 @@ resource "aws_lb_listener" "this" {
   port              = 80
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+    type = "forward"
+
+    forward {
+      target_group {
+        arn = aws_lb_target_group.this.arn
+      }
+    }
   }
 
   tags = {
@@ -35,6 +44,10 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_target_group_attachment" "this" {
+  for_each = toset(local.ports_target)
+  # for_each = aws_lb_target_group.this
+
   target_group_arn = aws_lb_target_group.this.arn
   target_id        = module.ec2_this[0].id
+  port             = each.value
 }
