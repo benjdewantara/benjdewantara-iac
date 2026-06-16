@@ -1,4 +1,8 @@
-variable "github_pat" {
+variable "git_repository_pat" {
+  type = string
+}
+
+variable "git_repository_uri" {
   type = string
 }
 
