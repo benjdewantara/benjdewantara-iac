@@ -9,7 +9,7 @@ module "iam_policy" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "AllowCloudWatchAgentConfigurerWizard",
+          "Sid" : "AllowLogsAndSecretsManager",
           "Effect" : "Allow",
           "Action" : [
             "logs:CreateLogGroup",
