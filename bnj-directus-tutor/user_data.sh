@@ -135,7 +135,8 @@ install_node_npm_as_ec2user() {
 }
 install_node_npm_as_ec2user
 
-install_pnpm() {
+# this still fails
+install_pnpm_still_fails() {
   echo "Will install_pnpm"
 
   curl -fsSL https://get.pnpm.io/install.sh | sh -
@@ -148,7 +149,7 @@ install_pnpm() {
 
   echo "Finished install_pnpm"
 }
-install_pnpm
+install_pnpm_still_fails
 
 identify_ebs_volume_then_mount() {
   local device_formatted=$(sudo file -s ${ebs_device_name_in_machine})
