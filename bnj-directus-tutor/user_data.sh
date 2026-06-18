@@ -16,8 +16,7 @@ yum install -y git
 yum install -y nc
 yum install -y jq
 # thanks to https://unix.stackexchange.com/a/249495/186480
-# use `yum list` to discover the exact `postgresql16.x86_64`
-yum install -y postgresql16.x86_64
+yum install -y postgresql18-server.x86_64
 
 create_dummy_service_unit() {
   local filename_shell_script="bnj-directus-frontend-plain-html.sh"
@@ -199,13 +198,20 @@ replace_localhost_with_app_domain() {
   local f="$dir_frontend/.env"
   sed -i "$f" -E -e " /NEXT_PUBLIC_DIRECTUS_URL=/! b ; s/localhost/$app_domain/g "
   sed -i "$f" -E -e " /NEXT_PUBLIC_SITE_URL=/! b ; s/localhost/$app_domain/g "
+}
+replace_localhost_with_app_domain
+
+docker_compose_up() {
+  dir_current=$(realpath .)
+  dir_directus=$(find '/home/ec2-user/app' -type d -name '*directus' | head -n 1)
+  dir_frontend=$(find '/home/ec2-user/app' -type d -name '*nextjs' | head -n 1)
 
   echo "Will do 'docker compose up' on $dir_directus"
   cd "$dir_directus" && docker compose up -d
   # shellcheck disable=SC2164
   cd "$dir_current"
 }
-replace_localhost_with_app_domain
+docker_compose_up
 
 adjust_personal_prefs() {
   local dir_home="/home/ec2-user"
