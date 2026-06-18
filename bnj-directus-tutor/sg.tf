@@ -1,52 +1,33 @@
-module "sg_this" {
-  source = "terraform-aws-modules/security-group/aws"
+resource "aws_security_group" "this" {
+  vpc_id      = module.vpc.vpc_id
+  name        = local.projectname
+  description = "Security group for ${local.projectname}"
+}
 
-  name            = local.projectname
-  description     = "Security group sample"
-  vpc_id          = module.vpc.vpc_id
-  use_name_prefix = false
+resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.this.id
 
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 0
-      protocol    = -1
-      description = "Allow all incoming IPv4"
-      cidr_blocks = "0.0.0.0/0"
-    },
-  ]
+  cidr_ipv4 = "0.0.0.0/0"
+}
 
-  ingress_with_ipv6_cidr_blocks = [
-    {
-      from_port        = 0
-      to_port          = 0
-      protocol         = -1
-      description      = "Allow all incoming IPv6"
-      ipv6_cidr_blocks = "::/0"
-    },
-  ]
+resource "aws_vpc_security_group_egress_rule" "this_ipv6" {
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.this.id
 
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 0
-      protocol    = -1
-      description = "Allow all outgoing IPv4"
-      cidr_blocks = "0.0.0.0/0"
-    },
-  ]
+  cidr_ipv6 = "::/0"
+}
 
-  egress_with_ipv6_cidr_blocks = [
-    {
-      from_port        = 0
-      to_port          = 0
-      protocol         = -1
-      description      = "Allow all outgoing IPv6"
-      ipv6_cidr_blocks = "::/0"
-    },
-  ]
+resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.this.id
 
-  tags = {
-    iacpath = "bnj-directus-tutor/sg.tf"
-  }
+  cidr_ipv4 = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.this.id
+
+  cidr_ipv6 = "::/0"
 }

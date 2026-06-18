@@ -48,3 +48,7 @@ resource "random_string" "this" {
 output "app_domain" {
   value = aws_route53_record.this.name
 }
+
+output "app_domain_http" {
+  value = "http://${aws_route53_record.this.name}"
+}
