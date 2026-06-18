@@ -202,8 +202,8 @@ clone_app_repository
 
 replace_localhost_with_app_domain() {
   dir_current=$(realpath .)
-  dir_directus=$(find "$dir_app_directus" -type d -name '*directus' | head -n 1)
-  dir_frontend=$(find "$dir_app_directus" -type d -name '*nextjs' | head -n 1)
+  dir_directus=$(find "$dir_app_directus" -type d -name 'directus' | head -n 1)
+  dir_frontend=$(find "$dir_app_directus" -type d -name 'nextjs' | head -n 1)
 
   echo "Will replace_localhost_with_app_domain"
   [[ -z $app_domain ]] && echo "app_domain is not set, will not perform replacement" && return
@@ -222,8 +222,8 @@ replace_localhost_with_app_domain
 
 docker_compose_up() {
   dir_current=$(realpath .)
-  dir_directus=$(find "$dir_app_directus" -type d -name '*directus' | head -n 1)
-  dir_frontend=$(find "$dir_app_directus" -type d -name '*nextjs' | head -n 1)
+  dir_directus=$(find "$dir_app_directus" -type d -name 'directus' | head -n 1)
+  dir_frontend=$(find "$dir_app_directus" -type d -name 'nextjs' | head -n 1)
 
   echo "Will do 'docker compose up' on $dir_directus"
   cd "$dir_directus" && docker compose up -d
