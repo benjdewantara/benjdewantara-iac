@@ -1,6 +1,9 @@
 version: 0.2
-
+env:
+  secrets-manager:
+    CREDENTIALS_GIT_REPO: "/secret/manager/credentials-git-repo"
 phases:
   build:
     commands:
       - echo "Hello World"
+      - echo "Secrets value of credentials-git-repo is $CREDENTIALS_GIT_REPO"

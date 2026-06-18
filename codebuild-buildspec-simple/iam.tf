@@ -17,6 +17,7 @@ module "iam_policy" {
             "logs:DescribeLogGroups",
             "logs:DescribeLogStreams",
             "logs:PutLogEvents",
+            "secretsmanager:GetSecretValue",
           ],
           "Resource" : "*"
         },
