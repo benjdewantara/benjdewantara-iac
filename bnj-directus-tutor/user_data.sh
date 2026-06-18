@@ -7,6 +7,8 @@ ebs_device_name_in_machine="${ebs_device_name_in_machine}"
 app_uri="http://$app_domain:8055"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
 
+dir_app_directus="/home/ec2-user/app"
+
 echo "This is the start of bnj-directus-tutor\user_data.sh"
 
 set -x
@@ -27,11 +29,11 @@ create_dummy_service_unit() {
   cat <<EOF >/home/ec2-user/$filename_shell_script
 #!/bin/bash
 while [[ 1 ]]; do
-  /home/ec2-user/app/plain/server.sh | nc -l 0.0.0.0 3000
+  $dir_app_directus/plain/server.sh | nc -l 0.0.0.0 3000
 done;
 EOF
 
-  chmod +x /home/ec2-user/app/plain/server.sh
+  chmod +x $dir_app_directus/plain/server.sh
   chmod +x /home/ec2-user/$filename_shell_script
 
   cat <<EOF >/home/ec2-user/$filename_service_unit
@@ -46,8 +48,8 @@ Type=simple
 ExecStart=/home/ec2-user/$filename_shell_script
 KillMode=process
 Restart=always
-Environment="SERVER_DIR=/home/ec2-user/app/plain"
-WorkingDirectory=/home/ec2-user/app/plain
+Environment="SERVER_DIR=$dir_app_directus/plain"
+WorkingDirectory=$dir_app_directus/plain
 RestartSec=15s
 
 [Install]
@@ -183,24 +185,24 @@ install_followup_docker() {
 install_followup_docker
 
 clone_app_repository() {
-  git clone '${uri_app_repository}' /home/ec2-user/app
+  git clone '${uri_app_repository}' $dir_app_directus
   # cd /home/ec2-user && git clone '${uri_app_repository}'
 
   while IFS= read -r -d '' file; do
     # shellcheck disable=SC2016
     echo "Will replace $file"
     sed -i $file -E -e "s/%APP_URI%/$app_uri_backslash_escaped/g"
-  done < <(find '/home/ec2-user/app' -mtime -7 -name '*.html' -print0)
+  done < <(find "$dir_app_directus" -mtime -7 -name '*.html' -print0)
 
   chown -R ec2-user: /home/ec2-user
-  find /home/ec2-user/app -type f -name '*.sh' -exec chmod +x {} \;
+  find $dir_app_directus -type f -name '*.sh' -exec chmod +x {} \;
 }
 clone_app_repository
 
 replace_localhost_with_app_domain() {
   dir_current=$(realpath .)
-  dir_directus=$(find '/home/ec2-user/app' -type d -name '*directus' | head -n 1)
-  dir_frontend=$(find '/home/ec2-user/app' -type d -name '*nextjs' | head -n 1)
+  dir_directus=$(find "$dir_app_directus" -type d -name '*directus' | head -n 1)
+  dir_frontend=$(find "$dir_app_directus" -type d -name '*nextjs' | head -n 1)
 
   echo "Will replace_localhost_with_app_domain"
   [[ -z $app_domain ]] && echo "app_domain is not set, will not perform replacement" && return
@@ -219,8 +221,8 @@ replace_localhost_with_app_domain
 
 docker_compose_up() {
   dir_current=$(realpath .)
-  dir_directus=$(find '/home/ec2-user/app' -type d -name '*directus' | head -n 1)
-  dir_frontend=$(find '/home/ec2-user/app' -type d -name '*nextjs' | head -n 1)
+  dir_directus=$(find "$dir_app_directus" -type d -name '*directus' | head -n 1)
+  dir_frontend=$(find "$dir_app_directus" -type d -name '*nextjs' | head -n 1)
 
   echo "Will do 'docker compose up' on $dir_directus"
   cd "$dir_directus" && docker compose up -d
