@@ -6,8 +6,9 @@ provider "aws" {
 locals {
   nickname            = "bnj-test"
   bucketname          = "${local.nickname}-temporal"
-  secretsmanager_name = "${local.nickname}/test/secrets"
+  secretsmanager_name = "${local.nickname}/test/secrets1"
   time_now            = timestamp()
+  secret_value        = jsonencode({ username = "benj", password = "whatthehell" })
 }
 
 resource "random_string" "this" {

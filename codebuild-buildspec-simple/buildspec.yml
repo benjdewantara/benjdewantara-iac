@@ -2,6 +2,8 @@ version: 0.2
 env:
   secrets-manager:
     CREDENTIALS_GIT_REPO: ${secretsmanager_name}
+    USERNAME: ${secretsmanager_name}:username
+    PASSWORD: ${secretsmanager_name}:password
 phases:
   build:
     commands:
@@ -9,6 +11,14 @@ phases:
       - varNew=`echo $CREDENTIALS_GIT_REPO | base64`
       - echo "Secrets value should be hidden by CodeBuild, the value is $CREDENTIALS_GIT_REPO"
       - echo "Secrets value base64 encoded is $varNew"
+
       - varNew=`echo $varNew | base64 --decode`
       - echo "Secrets value base64 encoded then decoded then is $varNew"
-      - printenv
+
+      - echo "USERNAME is $USERNAME"
+      - u64=`echo $USERNAME | base64`
+      - echo "USERNAME base64 encoded is $u64"
+
+      - echo "PASSWORD is $PASSWORD"
+      - p64=`echo $PASSWORD | base64`
+      - echo "PASSWORD base64 encoded is $p64"
