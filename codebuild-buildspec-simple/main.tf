@@ -4,9 +4,10 @@ provider "aws" {
 }
 
 locals {
-  nickname   = "bnj-test"
-  bucketname = "${local.nickname}-temporal"
-  time_now   = timestamp()
+  nickname            = "bnj-test"
+  bucketname          = "${local.nickname}-temporal"
+  secretsmanager_name = "${local.nickname}/test/secrets"
+  time_now            = timestamp()
 }
 
 resource "random_string" "this" {
@@ -22,13 +23,21 @@ resource "aws_s3_bucket" "this" {
   bucket = local.bucketname
 }
 
+data "template_file" "this" {
+  template = file("${path.module}/buildspec.yml")
+
+  vars = {
+    secretsmanager_name = local.secretsmanager_name
+  }
+}
+
 resource "aws_codebuild_project" "this" {
   name         = local.nickname
   service_role = module.iam_role.arn
 
   source {
     type      = "NO_SOURCE"
-    buildspec = file("buildspec.yml")
+    buildspec = data.template_file.this.rendered
   }
 
   environment {

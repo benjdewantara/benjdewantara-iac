@@ -1,7 +1,7 @@
 version: 0.2
 env:
   secrets-manager:
-    CREDENTIALS_GIT_REPO: "/secret/manager/credentials-git-repo"
+    CREDENTIALS_GIT_REPO: "${secretsmanager_name}"
 phases:
   build:
     commands:
