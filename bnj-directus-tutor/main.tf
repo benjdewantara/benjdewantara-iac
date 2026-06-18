@@ -28,12 +28,17 @@ locals {
 
   zone_id    = ""
   app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
+
+  ebs_device_name            = "/dev/xvdz"
+  ebs_device_name_in_machine = "/dev/nvme1n1"
 }
 
 locals {
   ec2_instance_name = "${local.projectname}-${random_string.this.result}"
   time_now          = timestamp()
 }
+
+data "aws_region" "current" {}
 
 # this recreates resource random_string each time `terraform apply` occurs
 resource "random_string" "this" {

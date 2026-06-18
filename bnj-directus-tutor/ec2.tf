@@ -14,6 +14,7 @@ data "template_file" "user_data" {
     uri_app_repository                   = local.uri_app_repository
     app_domain                           = local.app_domain
     github_pat                           = local.github_pat
+    ebs_device_name_in_machine           = local.ebs_device_name_in_machine
   }
 }
 
@@ -21,6 +22,7 @@ data "template_file" "user_data" {
 # also see https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/blob/master/examples/complete/main.tf
 module "ec2_this" {
   depends_on = [random_string.this]
+  # depends_on = [aws_security_group.this]
 
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-ec2-instance.git"
   count  = local.create_vpc ? 1 : 0
@@ -39,4 +41,21 @@ module "ec2_this" {
     iacpath    = "bnj-directus-tutor/ec2.tf"
     app_domain = local.app_domain
   }
+}
+
+resource "aws_ebs_volume" "this" {
+  availability_zone = "${data.aws_region.current.region}a"
+  size              = 1
+  type              = "gp3"
+
+  tags = {
+    iacpath    = "bnj-directus-tutor/ec2.tf"
+    app_domain = local.app_domain
+  }
+}
+
+resource "aws_volume_attachment" "this" {
+  device_name = local.ebs_device_name
+  instance_id = module.ec2_this[0].id
+  volume_id   = aws_ebs_volume.this.id
 }

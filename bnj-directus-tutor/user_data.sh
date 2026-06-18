@@ -2,6 +2,7 @@
 
 app_domain='${app_domain}'
 github_pat='${github_pat}'
+ebs_device_name_in_machine="${ebs_device_name_in_machine}"
 
 app_uri="http://$app_domain:8055"
 app_uri_backslash_escaped=$(echo $app_uri | sed -E -s ' s/\//\\\//g ')
@@ -16,7 +17,8 @@ yum install -y git
 yum install -y nc
 yum install -y jq
 # thanks to https://unix.stackexchange.com/a/249495/186480
-yum install -y postgresql18-server.x86_64
+#yum install -y postgresql18-server.x86_64
+#yum install -y postgresql18.x86_64
 
 create_dummy_service_unit() {
   local filename_shell_script="bnj-directus-frontend-plain-html.sh"
@@ -145,6 +147,20 @@ install_pnpm() {
   echo "Finished install_pnpm"
 }
 install_pnpm
+
+identify_ebs_volume_then_mount() {
+  local device_formatted=$(sudo file -s ${ebs_device_name_in_machine})
+  if [[ "$${device_formatted/SGI XFS filesystem data/}" == "$device_formatted" ]]; then
+    echo 'The device ${ebs_device_name_in_machine} is already formatted'
+  else
+    echo 'Will format ${ebs_device_name_in_machine}'
+    mkfs -t xfs "${ebs_device_name_in_machine}"
+  fi
+
+  mkdir -p /data
+  mount "${ebs_device_name_in_machine}" /data
+}
+identify_ebs_volume_then_mount
 
 install_followup_docker_compose() {
   DOCKER_CONFIG="/usr/libexec/docker"
