@@ -22,11 +22,11 @@ locals {
   cidrs_subnet = [for k, v in range(2 * length(local.azs)) : cidrsubnet(local.cidr_vpc, 3, k)]
   create_vpc   = true
 
-  github_pat         = ""
-  uri_app_repository = "https://${local.github_pat}}@github.com/benjdewantara/bnj-directus-tutor.git"
+  github_pat         = var.github_pat
+  uri_app_repository = var.uri_app_repository
   s3_bucket_name     = local.projectname
 
-  zone_id    = ""
+  zone_id    = var.zone_id
   app_domain = "app-${random_string.this.result}.${data.aws_route53_zone.this.name}"
 
   ebs_device_name            = "/dev/xvdz"
