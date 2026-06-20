@@ -1,0 +1,12 @@
+data "aws_route53_zone" "this" {
+  zone_id = local.zone_id
+}
+
+resource "aws_route53_record" "this" {
+  name    = local.app_domain
+  type    = "CNAME"
+  zone_id = data.aws_route53_zone.this.zone_id
+  ttl     = 300
+  # records = [module.ec2_this[0].public_dns]
+  records = [aws_lb.this.dns_name]
+}

@@ -1,0 +1,17 @@
+{
+  "git_repository_pat": "",
+  "git_repository_uri": "",
+  "zone_id": "",
+  "projectname": "",
+  "projectname_subdomain": "",
+  "microservice_specs": {
+    "app1": {
+      "name": "",
+      "port": ""
+    },
+    "app2": {
+      "name": "",
+      "port": ""
+    }
+  }
+}
