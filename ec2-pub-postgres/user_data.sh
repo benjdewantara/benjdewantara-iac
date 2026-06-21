@@ -40,8 +40,8 @@ postgres_db_user_authenticate_with_password_wkwk() {
 
 # read https://www.postgresql.org/docs/current/auth-pg-hba-conf.html
 postgres_db_user_authenticate_unconditionally() {
-  sed -i $pg_hba_filename -E -e ' s/(^local\s+.+\s)(\w+$)/\1trust5/ '
-  sed -i $pg_hba_filename -E -e ' s/(^host\s+.+\s)(\w+$)/\1trust5/ '
+  sed -i $pg_hba_filename -E -e ' s/(^local\s+.+\s)(\w+$)/\1trust/ '
+  sed -i $pg_hba_filename -E -e ' s/(^host\s+.+\s)(\w+$)/\1trust/ '
   systemctl reload postgresql.service
 }
 postgres_db_user_authenticate_unconditionally
