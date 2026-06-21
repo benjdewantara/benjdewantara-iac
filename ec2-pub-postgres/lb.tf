@@ -72,6 +72,23 @@ resource "aws_lb_listener" "this_https" {
 resource "aws_lb_listener_rule" "this" {
   for_each = aws_lb_target_group.this
 
+  listener_arn = aws_lb_listener.this.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = each.value.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["*"]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "this_https" {
+  for_each = aws_lb_target_group.this
+
   listener_arn = aws_lb_listener.this_https.arn
 
   action {
@@ -81,7 +98,7 @@ resource "aws_lb_listener_rule" "this" {
 
   condition {
     path_pattern {
-      values = ["/api/${each.key}/*"]
+      values = ["*"]
     }
   }
 }

@@ -5,13 +5,10 @@
   "projectname": "",
   "projectname_subdomain": "",
   "microservice_specs": {
-    "app1": {
-      "name": "",
-      "port": ""
-    },
-    "app2": {
-      "name": "",
-      "port": ""
+    "zitadel": {
+      "name": "zitadel",
+      "port": "8080"
     }
   }
+
 }
