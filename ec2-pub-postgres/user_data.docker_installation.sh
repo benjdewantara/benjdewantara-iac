@@ -5,7 +5,6 @@ echo "This is the start of ec2-pub-postgres\user_data.sh"
 dir_user='/home/ec2-user' && mkdir -p $dir_user
 pg_hba_filename='/var/lib/pgsql/data/pg_hba.conf'
 pg_hba_filename_bak="$pg_hba_filename.bak"
-file_helper="$dir_user/helper.sh" && echo '#!/bin/bash' >>$file_helper && chmod +x $file_helper
 
 set -x
 yum update -y
@@ -75,13 +74,6 @@ run_zitadel_root_user() {
 run_zitadel_postgres_user() {
   ZITADEL_DATABASE_POSTGRES_DSN=postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable ZITADEL_EXTERNALSECURE=false zitadel start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
 }
-
-cat <<EOF >$file_helper
-
-run_zitadel_postgres_user() {
-  ZITADEL_DATABASE_POSTGRES_DSN=postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable ZITADEL_EXTERNALSECURE=false zitadel start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
-}
-EOF
 
 # only `run_zitadel_postgres_user` seems to work
 # notice the connection string difference

@@ -7,7 +7,8 @@ data "template_file" "cw_config_json" {
 }
 
 data "template_file" "user_data" {
-  template = file("${path.module}/user_data.sh")
+  # template = file("${path.module}/user_data.docker_installation.sh")
+  template = file("${path.module}/user_data.binary_installation.sh")
 
   vars = {
     user_data_cwagent_config_json_base64 = base64encode(data.template_file.cw_config_json.rendered)
