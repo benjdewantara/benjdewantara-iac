@@ -6,6 +6,7 @@ dir_user='/home/ec2-user' && mkdir -p $dir_user
 pg_hba_filename='/var/lib/pgsql/data/pg_hba.conf'
 pg_hba_filename_bak="$pg_hba_filename.bak"
 file_helper="$dir_user/helper.sh" && echo '#!/bin/bash' >>$file_helper && chmod +x $file_helper
+file_bashrc="$dir_user/.bashrc"
 
 set -x
 yum update -y
@@ -85,6 +86,12 @@ EOF
 
 # only `run_zitadel_postgres_user` seems to work
 # notice the connection string difference
+
+cat <<EOF >>$file_bashrc
+
+export ZITADEL_DATABASE_POSTGRES_DSN=postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable
+export ZITADEL_EXTERNALSECURE=false
+EOF
 
 chown -R ec2-user: $dir_user
 
