@@ -66,7 +66,17 @@ set -x
 output_states_to_file
 
 # run zitadel (dont't do this on user data)
-#ZITADEL_DATABASE_POSTGRES_DSN=postgresql://root:postgres@localhost:5432/postgres?sslmode=disable ZITADEL_EXTERNALSECURE=false zitadel start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
+# taken from https://zitadel.com/docs/self-hosting/deploy/linux
+run_zitadel_root_user() {
+  ZITADEL_DATABASE_POSTGRES_DSN=postgresql://root:postgres@localhost:5432/postgres?sslmode=disable ZITADEL_EXTERNALSECURE=false zitadel start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
+}
+
+run_zitadel_postgres_user() {
+  ZITADEL_DATABASE_POSTGRES_DSN=postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable ZITADEL_EXTERNALSECURE=false zitadel start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
+}
+
+# only `run_zitadel_postgres_user` seems to work
+# notice the connection string difference
 
 chown -R ec2-user: $dir_user
 
