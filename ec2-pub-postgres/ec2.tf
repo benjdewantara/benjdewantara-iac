@@ -6,6 +6,10 @@ data "template_file" "cw_config_json" {
   }
 }
 
+data "template_file" "zitadel_config" {
+  template = file("${path.module}/zitadel-config.yml")
+}
+
 data "template_file" "user_data" {
   # template = file("${path.module}/user_data.docker_installation.sh")
   template = file("${path.module}/user_data.binary_installation.sh")
@@ -16,6 +20,7 @@ data "template_file" "user_data" {
     app_domain                           = local.app_domain
     projectname                          = local.projectname
     github_pat                           = local.github_pat
+    zitadel_config_content               = data.template_file.zitadel_config.rendered
   }
 }
 
