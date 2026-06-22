@@ -5,7 +5,7 @@ provider "azuread" {
 data "azuread_client_config" "current" {}
 
 resource "azuread_application_registration" "this" {
-  display_name = "Test Entra Application"
+  display_name = var.app_display_name
 }
 
 resource "azuread_application_redirect_uris" "this" {
