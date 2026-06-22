@@ -10,7 +10,7 @@ resource "azuread_application_registration" "this" {
 
 resource "azuread_application_redirect_uris" "this" {
   application_id = azuread_application_registration.this.id
-  redirect_uris  = ["http://localhost:8080"]
+  redirect_uris  = ["http://localhost:8080/callback"]
   type           = "Web"
 }
 
