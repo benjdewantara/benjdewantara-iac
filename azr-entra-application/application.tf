@@ -4,6 +4,10 @@ provider "azuread" {
 
 data "azuread_client_config" "current" {}
 
+resource "azuread_application" "this" {
+  display_name = "Test Entra Application"
+}
+
 output "whoami" {
   value = data.azuread_client_config.current.id
 }
