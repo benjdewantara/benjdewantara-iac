@@ -8,8 +8,8 @@ resource "aws_s3_bucket" "this" {
 }
 
 locals {
-  root_dir   = var.root_dir
-  filenames  = fileset(local.root_dir, "**")
+  root_dir  = var.root_dir
+  filenames = fileset(local.root_dir, "**")
 
   file_upload_specs = [for f in local.filenames : {
     pathabs = join("/", [local.root_dir, f])
