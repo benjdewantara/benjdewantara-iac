@@ -3,5 +3,6 @@
   "aws_region": "",
   "bucketname": "",
   "project_name": "",
+  "root_dir": "",
   "vue_project_dir": ""
 }
