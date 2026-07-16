@@ -10,7 +10,9 @@ yum install -y git
 defectdojo_install() {
   cd "$dir_user" || exit
   local marker=$(mktemp)
+  set +x
   git clone $git_uri_defectdojo
+  set -x
   chown -R ec2-user: $dir_user
 
   local dir_git=$(find . -type d -newer $marker | sed '2!d')
