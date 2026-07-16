@@ -20,16 +20,19 @@ docker_compose_install() {
 }
 docker_compose_install
 
-docker_followup_install() {
+docker_bash_completion_install() {
   usermod -a -G docker ec2-user
 
   # bash-completion for docker
   set +x
   curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
   set -x
+}
+docker_bash_completion_install
 
+docker_enable_install() {
   systemctl start docker
   systemctl enable docker.service
   systemctl enable containerd.service
 }
-docker_followup_install
+docker_enable_install

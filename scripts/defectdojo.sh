@@ -8,8 +8,13 @@ yum update -y
 yum install -y git
 
 defectdojo_install() {
-  cd $dir_user || exit
+  cd "$dir_user" || exit
+  local marker=$(mktemp)
   git clone $git_uri_defectdojo
   chown -R ec2-user: $dir_user
+
+  local dir_git=$(find . -type d -newer $marker | sed '2!d')
+  cd "$dir_git" || exit
+  docker compose up -d
 }
 defectdojo_install
