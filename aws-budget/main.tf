@@ -8,7 +8,7 @@ resource "aws_budgets_budget" "this" {
   budget_type = "COST"
   time_unit   = "MONTHLY"
 
-  limit_amount = "111"
+  limit_amount = var.limit_amount_usd
   limit_unit   = "USD"
 
   # planned_limit {
