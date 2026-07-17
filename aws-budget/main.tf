@@ -28,4 +28,12 @@ resource "aws_budgets_budget" "this" {
   #   #   budget_adjustment_period = 1
   #   # }
   # }
+
+  notification {
+    comparison_operator = "GREATER_THAN"
+    notification_type   = "ACTUAL"
+    threshold           = 100
+    threshold_type      = "PERCENTAGE"
+    subscriber_email_addresses = var.subscriber_email_addresses
+  }
 }
