@@ -3,6 +3,8 @@ provider "aws" {
 }
 
 resource "aws_budgets_budget" "this" {
+  name = var.budgetname
+
   budget_type = "COST"
   time_unit   = "MONTHLY"
 
