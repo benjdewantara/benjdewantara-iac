@@ -6,6 +6,15 @@ data "azuread_client_config" "current" {}
 
 resource "azuread_application" "this" {
   display_name = var.app_display_name
+
+  sign_in_audience = "AzureADMyOrg"
+  api {
+    requested_access_token_version = 2
+  }
+}
+
+resource "azuread_service_principal" "this" {
+  client_id = azuread_application.this.client_id
 }
 
 resource "azuread_application_redirect_uris" "this" {
@@ -33,5 +42,5 @@ output "whoami" {
 
 output "client_secrets_id_file_content" {
   value     = data.template_file.this.rendered
-  sensitive = true // comment this if you want to show the content to stdout
+  # sensitive = true // comment this if you want to show the content to stdout
 }
