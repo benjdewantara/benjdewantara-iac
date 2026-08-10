@@ -1,6 +1,6 @@
 provider "aws" {
-  profile = "benjdewantara2"
-  region  = "ap-southeast-3"
+  profile = var.aws_profile_a
+  region  = var.aws_region_a
 }
 
 resource "random_string" "this" {
@@ -12,16 +12,21 @@ resource "random_string" "this" {
 }
 
 locals {
-  bucketname_random = "benj-${random_string.this.result}"
+  # bucketname_random = "benj-${random_string.this.result}"
+  bucketname_random = var.domain_bucketname
 }
 
 resource "aws_s3_bucket" "this" {
   bucket = local.bucketname_random
 
-
   tags = {
     "iacpath" = "cloudfront-s3-static-content/main.tf"
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket              = aws_s3_bucket.this.bucket
+  block_public_policy = false
 }
 
 resource "aws_s3_bucket_policy" "this" {
@@ -69,7 +74,7 @@ locals {
 }
 
 resource "aws_cloudfront_origin_access_control" "this" {
-  name                              = "example"
+  name                              = local.bucketname_random
   description                       = "Example Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
