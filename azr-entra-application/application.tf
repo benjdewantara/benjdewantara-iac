@@ -5,11 +5,15 @@ provider "azuread" {
 data "azuread_client_config" "current" {}
 
 resource "azuread_application" "this" {
-  display_name = var.app_display_name
+  display_name            = var.app_display_name
+  prevent_duplicate_names = true
 
   sign_in_audience = "AzureADMyOrg"
-  api {
-    requested_access_token_version = 2
+
+  feature_tags {
+    custom_single_sign_on = true
+    gallery               = false
+    # enterprise = true
   }
 }
 
@@ -19,7 +23,7 @@ resource "azuread_service_principal" "this" {
 
 resource "azuread_application_redirect_uris" "this" {
   application_id = azuread_application.this.id
-  redirect_uris  = ["http://localhost:8080/callback"]
+  redirect_uris  = ["http://localhost:1234/callback"]
   type           = "Web"
 }
 
@@ -41,6 +45,6 @@ output "whoami" {
 }
 
 output "client_secrets_id_file_content" {
-  value     = data.template_file.this.rendered
+  value = data.template_file.this.rendered
   # sensitive = true // comment this if you want to show the content to stdout
 }
