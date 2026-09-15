@@ -19,11 +19,8 @@ data "aws_subnets" "this" {
 }
 
 resource "aws_db_subnet_group" "this" {
+  name       = var.projectname
   subnet_ids = slice(data.aws_subnets.this.ids, 0, 2)
-}
-
-output "a64" {
-  value = aws_db_subnet_group.this
 }
 
 resource "aws_db_instance" "this" {
