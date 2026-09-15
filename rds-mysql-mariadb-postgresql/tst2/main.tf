@@ -10,10 +10,11 @@ module "vpc" {
   vpc_cidr    = "10.0.0.0/24"
 }
 
-# module "rds" {
-#   source = "../rds-single"
-#
-#   aws_profile = var.aws_profile
-#   projectname = var.projectname
-#   aws_region  = "ap-southeast-1"
-# }
+module "rds" {
+  source = "../rds-single"
+
+  aws_profile = var.aws_profile
+  projectname = var.projectname
+  aws_region  = "ap-southeast-1"
+
+}

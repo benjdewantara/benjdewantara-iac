@@ -2,3 +2,7 @@ variable "aws_profile" { type = string }
 variable "aws_region" { type = string }
 variable "projectname" { type = string }
 variable "vpc_cidr" { type = string }
+
+output "vpc_id" {
+  value = aws_vpc.this.id
+}

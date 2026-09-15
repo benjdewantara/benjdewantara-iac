@@ -8,11 +8,11 @@ data "aws_availability_zone" "this" {
 }
 
 data "aws_vpc" "this" {
-  id = ""
+  id = var.vpc_id
 }
 
 data "aws_security_group" "this" {
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = data.aws_vpc.this.id
 }
 
 locals {
@@ -30,7 +30,8 @@ resource "aws_db_instance" "this" {
   username = "admin"
   password = "your-secure-password" # Consider using AWS Secrets Manager for production
 
-  skip_final_snapshot = true
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [data.aws_security_group.this.id]
 }
 
 /*
