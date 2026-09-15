@@ -3,7 +3,8 @@ variable "projectname" { type = string }
 variable "region" { type = string }
 
 provider "aws" {
-  region = var.region
+  region  = var.region
+  profile = var.aws_profile
 }
 
 # module "vpc" {
@@ -23,10 +24,6 @@ locals {
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
   cidr_vpc     = "10.0.0.0/24"
   cidrs_subnet = [for k, v in range(2 * length(local.azs)) : cidrsubnet(local.cidr_vpc, 3, k)]
-}
-
-output "a21" {
-  value = local.cidrs_subnet
 }
 
 module "vpc" {
@@ -50,11 +47,11 @@ module "vpc" {
   }
 }
 
-# module "rds" {
-#   source = "../rds-single"
-#
-#   aws_profile = var.aws_profile
-#   projectname = var.projectname
-#   aws_region  = "ap-southeast-1"
-#   vpc_id      = module.vpc.vpc_id
-# }
+module "rds" {
+  source = "../rds-single"
+
+  aws_profile = var.aws_profile
+  projectname = var.projectname
+  aws_region  = "ap-southeast-1"
+  vpc_id      = module.vpc.vpc_id
+}

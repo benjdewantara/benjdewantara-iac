@@ -11,15 +11,23 @@ data "aws_vpc" "this" {
   id = var.vpc_id
 }
 
-data "aws_security_group" "this" {
-  vpc_id = data.aws_vpc.this.id
+data "aws_subnets" "this" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.this.id]
+  }
 }
 
-locals {
-  availability_zone_single = "${var.aws_region}a"
+resource "aws_db_subnet_group" "this" {
+  subnet_ids = slice(data.aws_subnets.this.ids, 0, 2)
+}
+
+output "a64" {
+  value = aws_db_subnet_group.this
 }
 
 resource "aws_db_instance" "this" {
+  db_name           = var.projectname
   identifier        = var.projectname
   engine            = "mysql"
   engine_version    = "8.0"
@@ -30,8 +38,9 @@ resource "aws_db_instance" "this" {
   username = "admin"
   password = "your-secure-password" # Consider using AWS Secrets Manager for production
 
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [data.aws_security_group.this.id]
+  skip_final_snapshot = true
+  # vpc_security_group_ids = [data.vpc.default_security_group_id]
+  db_subnet_group_name = aws_db_subnet_group.this.id
 }
 
 /*
