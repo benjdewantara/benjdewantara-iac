@@ -41,22 +41,6 @@ resource "aws_db_instance" "example" {
   skip_final_snapshot = true
 }
 
-# resource "aws_rds_cluster" "example" {
-#   cluster_identifier = "example"
-#   availability_zones = [local.availability_zone_single]
-#   engine             = "mysql"
-#   # db_cluster_instance_class = "db.r6gd.xlarge"
-#   # db_cluster_instance_class = "db.t4g.micro"
-#   db_cluster_instance_class = "db.t4g.large"
-#   storage_type              = "io1"
-#   allocated_storage         = 100
-#   iops                      = 1000
-#   master_username           = "test"
-#   master_password           = "mustbeeightcharaters"
-#
-#   vpc_security_group_ids = [data.aws_security_group.this.id]
-# }
-
 /*
 Action=CreateDBInstance
 Version=2014-10-31
@@ -89,7 +73,3 @@ CACertificateIdentifier=rds-ca-rsa2048-g1
 MultiTenant=false
 EngineLifecycleSupport=open-source-rds-extended-support-disabled
 */
-
-output "a27" {
-  value = data.aws_availability_zone.this.name
-}

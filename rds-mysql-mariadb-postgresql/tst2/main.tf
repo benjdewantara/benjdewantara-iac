@@ -8,6 +8,3 @@ module "rds" {
   projectname = var.projectname
   aws_region  = "ap-southeast-1"
 }
-output "a12" {
-  value = module.rds.a27
-}
