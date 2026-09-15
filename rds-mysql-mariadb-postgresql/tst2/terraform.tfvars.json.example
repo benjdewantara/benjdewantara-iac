@@ -1,5 +1,7 @@
 {
   "aws_profile": "",
   "projectname": "",
-  "region": ""
+  "region": "",
+  "rds_engine": "",
+  "rds_engine_version": ""
 }
