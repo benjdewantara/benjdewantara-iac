@@ -40,7 +40,7 @@ resource "aws_db_instance" "this" {
 
   skip_final_snapshot = true
   # vpc_security_group_ids = [data.vpc.default_security_group_id]
-  db_subnet_group_name = aws_db_subnet_group.this.id
+  db_subnet_group_name = aws_db_subnet_group.this.name
 }
 
 /*
