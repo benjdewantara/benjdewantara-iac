@@ -26,13 +26,13 @@ resource "aws_db_subnet_group" "this" {
 resource "aws_db_instance" "this" {
   db_name           = var.projectname
   identifier        = var.projectname
-  engine            = "mysql"
-  engine_version    = "8.0"
+  engine            = var.rds_engine
+  engine_version    = var.rds_engine_version
   instance_class    = "db.t4g.micro"
   allocated_storage = 5
   # storage_type      = "gp2"
 
-  username = "admin"
+  username = "adminx"
   password = "your-secure-password" # Consider using AWS Secrets Manager for production
 
   skip_final_snapshot = true

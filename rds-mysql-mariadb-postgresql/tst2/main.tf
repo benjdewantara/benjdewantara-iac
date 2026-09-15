@@ -1,5 +1,7 @@
 variable "aws_profile" { type = string }
 variable "projectname" { type = string }
+variable "rds_engine" { type = string }
+variable "rds_engine_version" { type = string }
 variable "region" { type = string }
 
 provider "aws" {
@@ -50,8 +52,10 @@ module "vpc" {
 module "rds" {
   source = "../rds-single"
 
-  aws_profile = var.aws_profile
-  projectname = var.projectname
-  aws_region  = "ap-southeast-1"
-  vpc_id      = module.vpc.vpc_id
+  aws_profile        = var.aws_profile
+  aws_region         = "ap-southeast-1"
+  projectname        = var.projectname
+  rds_engine         = var.rds_engine
+  rds_engine_version = var.rds_engine_version
+  vpc_id             = module.vpc.vpc_id
 }
