@@ -1,5 +1,10 @@
 variable "aws_profile" { type = string }
 variable "projectname" { type = string }
+variable "region" { type = string }
+
+provider "aws" {
+  region = var.region
+}
 
 # module "vpc" {
 #   source = "../vpc"
@@ -10,7 +15,9 @@ variable "projectname" { type = string }
 #   vpc_cidr    = "10.0.0.0/24"
 # }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  region = "ap-southeast-1"
+}
 
 locals {
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
@@ -39,7 +46,7 @@ module "vpc" {
   manage_default_security_group = false
 
   tags = {
-    iacpath = "bnj-directus-tutor/vpc.tf"
+    iacpath = "tst2/main.tf"
   }
 }
 

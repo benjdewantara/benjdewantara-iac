@@ -1,4 +1,5 @@
 {
   "aws_profile": "",
-  "projectname": ""
+  "projectname": "",
+  "region": ""
 }
