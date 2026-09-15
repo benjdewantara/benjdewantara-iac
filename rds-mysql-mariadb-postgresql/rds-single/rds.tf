@@ -7,8 +7,8 @@ data "aws_availability_zone" "this" {
   name = "${var.aws_region}a"
 }
 
-data "aws_vpc" "default" {
-  default = true
+data "aws_vpc" "this" {
+  id = ""
 }
 
 data "aws_security_group" "this" {
@@ -19,7 +19,7 @@ locals {
   availability_zone_single = "${var.aws_region}a"
 }
 
-resource "aws_db_instance" "example" {
+resource "aws_db_instance" "this" {
   identifier        = var.projectname
   engine            = "mysql"
   engine_version    = "8.0"
