@@ -28,12 +28,12 @@ locals {
 }
 
 resource "aws_db_instance" "example" {
-  identifier        = "mylab-mysql-instance"
+  identifier        = var.projectname
   engine            = "mysql"
   engine_version    = "8.0"
   instance_class    = "db.t4g.micro"
-  allocated_storage = 20
-  storage_type      = "gp2"
+  allocated_storage = 5
+  # storage_type      = "gp2"
 
   username = "admin"
   password = "your-secure-password" # Consider using AWS Secrets Manager for production
@@ -41,32 +41,20 @@ resource "aws_db_instance" "example" {
   skip_final_snapshot = true
 }
 
-resource "aws_rds_cluster" "example" {
-  cluster_identifier = "example"
-  availability_zones = [local.availability_zone_single]
-  engine             = "mysql"
-  # db_cluster_instance_class = "db.r6gd.xlarge"
-  # db_cluster_instance_class = "db.t4g.micro"
-  db_cluster_instance_class = "db.t4g.large"
-  storage_type              = "io1"
-  allocated_storage         = 100
-  iops                      = 1000
-  master_username           = "test"
-  master_password           = "mustbeeightcharaters"
-
-  vpc_security_group_ids = [data.aws_security_group.this.id]
-}
-
-# resource "aws_rds_cluster" "this" {
-#   database_name = var.projectname
+# resource "aws_rds_cluster" "example" {
+#   cluster_identifier = "example"
+#   availability_zones = [local.availability_zone_single]
+#   engine             = "mysql"
+#   # db_cluster_instance_class = "db.r6gd.xlarge"
+#   # db_cluster_instance_class = "db.t4g.micro"
+#   db_cluster_instance_class = "db.t4g.large"
+#   storage_type              = "io1"
+#   allocated_storage         = 100
+#   iops                      = 1000
+#   master_username           = "test"
+#   master_password           = "mustbeeightcharaters"
 #
-#   engine                    = "mysql"
-#   region                    = var.aws_region
-#   allocated_storage         = 1
-#   db_cluster_instance_class = "db.t4g.micro"
-#   engine_version            = "8.4.9"
-#   availability_zones        = [local.availability_zone_single]
-#
+#   vpc_security_group_ids = [data.aws_security_group.this.id]
 # }
 
 /*
