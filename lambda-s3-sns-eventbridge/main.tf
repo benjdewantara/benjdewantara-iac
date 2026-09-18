@@ -21,7 +21,17 @@ module "lambda_sns" {
   source = "./lambda-sns"
 
   aws_profile           = var.aws_profile
-  projectname           = var.projectname
+  projectname           = "${var.projectname}-sns"
+  region                = var.region
+  template_portal_url   = var.template_portal_url
+  template_static_token = var.template_static_token
+}
+
+module "lambda_eventBridge" {
+  source = "./lambda-eventBridge"
+
+  aws_profile           = var.aws_profile
+  projectname           = "${var.projectname}-eventBridge"
   region                = var.region
   template_portal_url   = var.template_portal_url
   template_static_token = var.template_static_token

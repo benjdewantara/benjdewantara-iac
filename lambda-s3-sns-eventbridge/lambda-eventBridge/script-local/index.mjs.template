@@ -1,0 +1,26 @@
+// @ts-ignore
+export const handler = async (event) => {
+  let r = await fetch(
+    '${portal_url}',
+    {
+      headers: {
+        Authorization: 'Bearer ${static_token}',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        event_received: JSON.stringify(event),
+      }),
+      method: 'POST',
+    }
+  );
+  let j = await r.json();
+  j = JSON.stringify(j);
+
+  console.log(`event is ` + JSON.stringify(event))
+
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify(`Hello from Lambda! with portal response = ` + j),
+  };
+  return response;
+};

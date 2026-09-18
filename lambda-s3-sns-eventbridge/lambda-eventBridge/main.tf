@@ -30,7 +30,7 @@ resource "aws_iam_role" "this" {
   })
 
   tags = {
-    iacpath = "lambda-s3-sns-eventbridge/lambda-sns/main.tf"
+    iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
   }
 }
 
@@ -73,28 +73,38 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.this.output_base64sha256
 
   tags = {
-    iacpath = "lambda-s3-sns-eventbridge/lambda-sns/main.tf"
+    iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
   }
 }
 
-resource "aws_sns_topic" "this" {
-  display_name = var.projectname
-  name         = var.projectname
+resource "aws_cloudwatch_event_bus" "this" {
+  name = var.projectname
+}
+
+resource "aws_cloudwatch_event_rule" "this" {
+  name = var.projectname
+
+  event_bus_name = aws_cloudwatch_event_bus.this.name
+
+  event_pattern = jsonencode({
+    "source" : ["aws.s3files"],
+    "detail-type" : ["AWS API Call via CloudTrail"],
+    "resources" : [
+      "arn:aws:s3:::*",
+    ]
+    "detail" : {
+      "eventSource" : ["s3files.amazonaws.com"]
+    }
+    }
+  )
 
   tags = {
-    iacpath = "lambda-s3-sns-eventbridge/lambda-sns/main.tf"
+    iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
   }
 }
 
-resource "aws_sns_topic_subscription" "this" {
-  endpoint  = aws_lambda_function.this.arn
-  protocol  = "lambda"
-  topic_arn = aws_sns_topic.this.arn
-}
-
-resource "aws_lambda_permission" "this" {
-  source_arn    = aws_sns_topic.this.arn
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.this.function_name
-  principal     = "sns.amazonaws.com"
+resource "aws_cloudwatch_event_target" "this" {
+  arn            = aws_lambda_function.this.arn
+  rule           = aws_cloudwatch_event_rule.this.name
+  event_bus_name = aws_cloudwatch_event_rule.this.event_bus_name
 }
