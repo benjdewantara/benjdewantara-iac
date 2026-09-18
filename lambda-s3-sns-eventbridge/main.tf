@@ -30,7 +30,7 @@ module "lambda_sns" {
 module "lambda_eventBridge" {
   source = "./lambda-eventBridge"
 
-  depends_on = [module.s3_bucket.bucketname]
+  depends_on = [module.s3_bucket]
 
   aws_profile           = var.aws_profile
   projectname           = "${var.projectname}-eventBridge"

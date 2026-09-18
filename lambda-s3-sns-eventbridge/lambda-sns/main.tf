@@ -4,11 +4,6 @@ variable "region" { type = string }
 variable "template_portal_url" { type = string }
 variable "template_static_token" { type = string }
 
-provider "aws" {
-  profile = var.aws_profile
-  region  = var.region
-}
-
 resource "aws_iam_role" "this" {
   name = var.projectname
 
