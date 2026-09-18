@@ -1,5 +1,6 @@
 variable "aws_profile" { type = string }
 variable "projectname" { type = string }
+variable "bucketname" { type = string }
 variable "region" { type = string }
 variable "template_portal_url" { type = string }
 variable "template_static_token" { type = string }
@@ -86,17 +87,21 @@ resource "aws_cloudwatch_event_rule" "this" {
 
   event_bus_name = aws_cloudwatch_event_bus.this.name
 
+  # event_pattern = jsonencode({
+  #   "source" : ["aws.s3files"],
+  #   "detail-type" : ["AWS API Call via CloudTrail"],
+  #   "resources" : [
+  #     "arn:aws:s3:::*",
+  #   ],
+  #   "detail" : {
+  #     "eventSource" : ["s3files.amazonaws.com"]
+  #   }
+  # })
+
   event_pattern = jsonencode({
-    "source" : ["aws.s3files"],
-    "detail-type" : ["AWS API Call via CloudTrail"],
-    "resources" : [
-      "arn:aws:s3:::*",
-    ]
-    "detail" : {
-      "eventSource" : ["s3files.amazonaws.com"]
-    }
-    }
-  )
+    "source" : ["aws.s3"],
+    "detail-type" : ["Object Created"]
+  })
 
   tags = {
     iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
@@ -107,4 +112,31 @@ resource "aws_cloudwatch_event_target" "this" {
   arn            = aws_lambda_function.this.arn
   rule           = aws_cloudwatch_event_rule.this.name
   event_bus_name = aws_cloudwatch_event_rule.this.event_bus_name
+}
+
+# resource "aws_lambda_permission" "this" {
+#   source_arn    = aws_cloudwatch_event_rule.this.arn
+#   function_name = aws_lambda_function.this.function_name
+#   action        = "lambda:InvokeFunction"
+#   principal     = "events.amazonaws.com"
+# }
+
+data "aws_s3_bucket" "this" {
+  bucket = var.bucketname
+}
+
+resource "aws_lambda_permission" "this" {
+  source_arn    = data.aws_s3_bucket.this.arn
+  function_name = aws_lambda_function.this.function_name
+  action        = "lambda:InvokeFunction"
+  principal     = "s3.amazonaws.com"
+}
+
+resource "aws_s3_bucket_notification" "this" {
+  bucket = data.aws_s3_bucket.this.bucket
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.this.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
 }

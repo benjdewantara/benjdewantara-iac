@@ -94,7 +94,7 @@ resource "aws_sns_topic_subscription" "this" {
 
 resource "aws_lambda_permission" "this" {
   source_arn    = aws_sns_topic.this.arn
-  action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.this.function_name
+  action        = "lambda:InvokeFunction"
   principal     = "sns.amazonaws.com"
 }
