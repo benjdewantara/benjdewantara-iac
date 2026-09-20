@@ -15,10 +15,38 @@ data "aws_caller_identity" "this" {
   provider = aws.this
 }
 
+data "aws_caller_identity" "that" {
+  provider = aws.that
+}
+
 resource "aws_iam_role" "this" {
   provider = aws.this
 
-  name                 = "iamr-source"
+  name                 = "iamr-this"
+  max_session_duration = 1 * 60 * 60
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Principal" : {
+          "AWS" : [
+            data.aws_caller_identity.this.account_id
+          ]
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "that" {
+  provider = aws.that
+
+  name                 = "iamr-that"
   max_session_duration = 1 * 60 * 60
 
   assume_role_policy = jsonencode({
