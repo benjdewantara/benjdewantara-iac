@@ -34,6 +34,27 @@ resource "aws_iam_role" "that" {
   )
 }
 
+resource "aws_iam_role_policy" "that" {
+  role = aws_iam_role.that.name
+  name = "CodeBuildCanCloudWatch-inline"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "CodeBuildCanCloudWatch",
+          "Effect" : "Allow",
+          "Action" : [
+            "logs:CreateLogStream",
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
+
 resource "aws_codebuild_project" "that" {
   name         = "cb-that"
   service_role = aws_iam_role.that.arn
