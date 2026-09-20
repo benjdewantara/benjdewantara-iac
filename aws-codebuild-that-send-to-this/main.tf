@@ -13,6 +13,25 @@ provider "aws" {
   region  = "ap-southeast-1"
 }
 
+data "aws_caller_identity" "this" {
+  provider = aws.this
+}
+
+data "aws_caller_identity" "that" {
+  provider = aws.that
+}
+
+locals {
+  this_projectname = "s3-this-parent1"
+  that_projectname = "cb-that"
+
+  this_account_id = data.aws_caller_identity.this.account_id
+  that_account_id = data.aws_caller_identity.that.account_id
+
+  arn_iam_role_format = "arn:aws:iam::%s:role/%s"
+  this_arn_iam_role   = format(local.arn_iam_role_format, local.this_account_id, local.this_projectname)
+}
+
 module "this" {
   source = "./this"
 
@@ -20,7 +39,9 @@ module "this" {
     aws = aws.this
   }
 
-  projectname = "s3-this-parent1"
+  projectname     = local.this_projectname
+  account_id_user = local.that_account_id
+  iam_role_user   = local.that_projectname
 }
 
 output "this_s3_bucketname" {
@@ -41,6 +62,7 @@ module "that" {
     aws = aws.that
   }
 
-  projectname      = "cb-that"
-  s3_bucket_parent = module.this.s3_bucketname
+  projectname         = local.that_projectname
+  s3_bucket_parent    = module.this.s3_bucketname
+  arn_iam_role_parent = local.this_arn_iam_role
 }
