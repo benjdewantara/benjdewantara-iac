@@ -19,10 +19,20 @@ data "aws_caller_identity" "that" {
   provider = aws.that
 }
 
+locals {
+  rolename_this = "iamr-this"
+  rolename_that = "iamr-that"
+
+  role_arn_format = "arn:aws:iam::%s:role/%s"
+
+  role_arn_this = format(local.role_arn_format, data.aws_caller_identity.this.account_id, local.rolename_this)
+  role_arn_that = format(local.role_arn_format, data.aws_caller_identity.that.account_id, local.rolename_that)
+}
+
 resource "aws_iam_role" "this" {
   provider = aws.this
 
-  name                 = "iamr-this"
+  name                 = local.rolename_this
   max_session_duration = 1 * 60 * 60
 
   assume_role_policy = jsonencode({
@@ -35,7 +45,8 @@ resource "aws_iam_role" "this" {
         ],
         "Principal" : {
           "AWS" : [
-            data.aws_caller_identity.this.account_id
+            data.aws_caller_identity.this.account_id,
+            local.role_arn_that,
           ]
         }
       }
@@ -46,7 +57,7 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_role" "that" {
   provider = aws.that
 
-  name                 = "iamr-that"
+  name                 = local.rolename_that
   max_session_duration = 1 * 60 * 60
 
   assume_role_policy = jsonencode({
