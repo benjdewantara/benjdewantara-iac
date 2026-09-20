@@ -3,17 +3,11 @@ variable "s3_bucket_parent" { type = string }
 
 data "aws_caller_identity" "that" {}
 
-data "aws_s3_bucket" "this" {
-  bucket = var.s3_bucket_parent
-}
-
 locals {
   arn_codebuild_format = "arn:aws:codebuild::%s:%s"
   arn_codebuild        = format(local.arn_codebuild_format, data.aws_caller_identity.that.account_id, "*")
-}
 
-data "local_file" "that" {
-  filename = "./buildspec.yml"
+  s3_uri_parent = "s3://${var.s3_bucket_parent}"
 }
 
 resource "aws_iam_role" "that" {
@@ -66,13 +60,21 @@ resource "aws_iam_role_policy" "that" {
   )
 }
 
+data "template_file" "that" {
+  template = file("./buildspec.yml")
+
+  vars = {
+    S3_URI_PARENT = local.s3_uri_parent
+  }
+}
+
 resource "aws_codebuild_project" "that" {
   name         = var.projectname
   service_role = aws_iam_role.that.arn
 
   source {
     type      = "NO_SOURCE"
-    buildspec = data.local_file.that.content
+    buildspec = data.template_file.that.rendered
   }
 
   environment {

@@ -1,6 +1,10 @@
 version: 0.2
+env:
+  variables:
+    S3_URI_PARENT: ${S3_URI_PARENT}
 phases:
   build:
     commands:
       - echo "Hello World"
       - aws sts get-caller-identity
+      - printenv

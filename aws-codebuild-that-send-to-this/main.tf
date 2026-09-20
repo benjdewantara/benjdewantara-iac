@@ -20,15 +20,20 @@ module "this" {
     aws = aws.this
   }
 
-  projectname = "s3-this-parent"
+  projectname = "s3-this-parent1"
 }
 
 output "this_s3_bucketname" {
   value = module.this.s3_bucketname
 }
 
+resource "time_sleep" "this_delay" {
+  depends_on      = [module.this]
+  create_duration = "10s"
+}
+
 module "that" {
-  depends_on = [module.this]
+  depends_on = [module.this, time_sleep.this_delay]
 
   source = "./that"
 
@@ -39,4 +44,3 @@ module "that" {
   projectname      = "cb-that"
   s3_bucket_parent = module.this.s3_bucketname
 }
-
