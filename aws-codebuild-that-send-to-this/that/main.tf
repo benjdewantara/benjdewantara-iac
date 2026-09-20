@@ -1,6 +1,11 @@
 variable "projectname" { type = string }
+variable "s3_bucket_parent" { type = string }
 
 data "aws_caller_identity" "that" {}
+
+data "aws_s3_bucket" "this" {
+  bucket = var.s3_bucket_parent
+}
 
 locals {
   arn_codebuild_format = "arn:aws:codebuild::%s:%s"
