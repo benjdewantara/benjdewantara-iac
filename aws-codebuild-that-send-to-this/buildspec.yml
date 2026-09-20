@@ -1,0 +1,6 @@
+version: 0.2
+env:
+phases:
+  build:
+    commands:
+      - echo "Hello World"
