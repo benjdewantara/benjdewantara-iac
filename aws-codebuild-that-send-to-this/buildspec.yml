@@ -3,3 +3,4 @@ phases:
   build:
     commands:
       - echo "Hello World"
+      - aws sts get-caller-identity
