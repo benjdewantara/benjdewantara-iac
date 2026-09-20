@@ -22,4 +22,4 @@ phases:
       - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - val=$(cat $f_sts_assume_role | jq -r .Credentials.SessionToken); export AWS_SESSION_TOKEN=$val
       - echo AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
-      - aws s3 cp $f_info $S3_URI_PARENT
+      - aws s3 cp --content-type 'text/plain' $f_info $S3_URI_PARENT
