@@ -46,6 +46,7 @@ resource "aws_iam_role_policy" "that" {
           "Sid" : "CodeBuildCanCloudWatch",
           "Effect" : "Allow",
           "Action" : [
+            "logs:CreateLogGroup",
             "logs:CreateLogStream",
           ],
           "Resource" : "*"
