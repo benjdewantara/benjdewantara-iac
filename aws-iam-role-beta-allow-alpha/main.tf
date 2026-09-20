@@ -77,3 +77,28 @@ resource "aws_iam_role" "that" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "that" {
+  provider = aws.that
+
+  role = aws_iam_role.that.name
+  name = "${aws_iam_role.that.name}-inline"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "AssumeParent",
+          "Effect" : "Allow",
+          "Action" : [
+            "sts:assumeRole",
+          ],
+          "Resource" : [
+            local.role_arn_this
+          ]
+        }
+      ]
+    }
+  )
+}
