@@ -48,6 +48,9 @@ resource "aws_iam_role_policy" "that" {
           "Action" : [
             "logs:CreateLogGroup",
             "logs:CreateLogStream",
+            # "logs:DescribeLogGroups",
+            # "logs:DescribeLogStreams",
+            "logs:PutLogEvents",
           ],
           "Resource" : "*"
         }
@@ -59,8 +62,6 @@ resource "aws_iam_role_policy" "that" {
 resource "aws_codebuild_project" "that" {
   name         = "cb-that"
   service_role = aws_iam_role.that.arn
-
-
 
   source {
     type      = "NO_SOURCE"
