@@ -19,5 +19,7 @@ module "that" {
   providers = {
     aws = aws.that
   }
+
+  projectname = "cb-that"
 }
 
