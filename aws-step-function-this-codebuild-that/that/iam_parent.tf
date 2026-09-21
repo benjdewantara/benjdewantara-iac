@@ -32,6 +32,7 @@ resource "aws_iam_role_policy" "that_codebuild_starter" {
           "Sid" : "CodeBuild",
           "Effect" : "Allow",
           "Action" : [
+            "codebuild:ListBuildsForProject",
             "codebuild:StartBuild",
           ],
           "Resource" : "*"
