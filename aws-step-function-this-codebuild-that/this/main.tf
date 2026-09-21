@@ -86,7 +86,7 @@ resource "aws_iam_role_policy" "this3" {
 }
 
 data "template_file" "this" {
-  template = "${path.module}/sfn_definition.json"
+  template = file("${path.module}/sfn_definition.json")
 
   vars = {
     arn_iam_role_name_codebuild_starter = var.arn_iam_role_name_codebuild_starter
