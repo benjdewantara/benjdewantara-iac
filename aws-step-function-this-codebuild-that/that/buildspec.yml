@@ -7,11 +7,12 @@ phases:
   build:
     commands:
       - echo "Hello World"
-#      - f_info=$(mktemp)
-#      - echo "This is information from another account" >> $f_info
-#      - aws sts get-caller-identity >> $f_info
-#      - echo "" >> $f_info
-#      - printenv >> $f_info
+      - f_info=$(mktemp)
+      - echo "This is information from another account" >> $f_info
+      - aws sts get-caller-identity >> $f_info
+      - echo "" >> $f_info
+      - printenv >> $f_info
+      - cat $f_info
 #      - echo "Will now s3 cp to another account bucket"
 #      - roleSessionName="AWSCodeBuild-$CODEBUILD_LOG_PATH"
 #      - f_sts_assume_role=$(mktemp)

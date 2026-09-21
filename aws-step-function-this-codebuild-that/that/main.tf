@@ -93,9 +93,10 @@ resource "aws_codebuild_project" "that" {
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
-    image        = "aws/codebuild/standard:8.0"
+    # image           = "aws/codebuild/standard:8.0"
+    image = "aws/codebuild/amazonlinux-x86_64-standard:6.0"
+    type  = "LINUX_CONTAINER"
     # host_kernel     = "LINUX_KERNEL_6"
-    type            = "LINUX_CONTAINER"
     privileged_mode = false
   }
 
