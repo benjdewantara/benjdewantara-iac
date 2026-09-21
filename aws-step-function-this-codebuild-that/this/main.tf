@@ -17,22 +17,13 @@ resource "aws_iam_role" "this" {
   })
 }
 
+data "local_file" "this" {
+  filename = "${path.module}/sfn_definition.json"
+}
+
 resource "aws_sfn_state_machine" "this" {
   name     = var.projectname
   role_arn = aws_iam_role.this.arn
 
-  definition = <<EOF
-{
-  "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
-  "StartAt": "HelloWorld",
-  "States": {
-    "HelloWorld": {
-      "Type": "Pass",
-      "Result": "Hello World!",
-      "End": true
-    }
-  }
-}
-EOF
-
+  definition = data.local_file.this.content
 }
