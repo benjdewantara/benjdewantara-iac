@@ -54,7 +54,7 @@ module "this" {
 
   source                              = "./this"
   projectname                         = local.this_projectname
-  arn_iam_role_name_codebuild_starter = local.that_iam_role_name_codebuild_starter
+  arn_iam_role_name_codebuild_starter = local.that_iam_role_arn_codebuild_starter
 }
 
 module "that" {
