@@ -40,6 +40,29 @@ resource "aws_iam_role_policy" "this" {
   )
 }
 
+resource "aws_iam_role_policy" "this2" {
+  role = aws_iam_role.this.name
+  name = "EventBridge-inline"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "EventBridge",
+          "Effect" : "Allow",
+          "Action" : [
+            "events:PutTargets",
+            "events:PutRule",
+            "events:DescribeRule",
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
+
 data "local_file" "this" {
   filename = "${path.module}/sfn_definition.json"
 }
