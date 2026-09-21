@@ -5,6 +5,14 @@
     "HelloWorld": {
       "Type": "Pass",
       "Result": "Hello World 123!",
+      "Next": "CodeBuild StartBuild"
+    },
+    "CodeBuild StartBuild": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::codebuild:startBuild.sync",
+      "Parameters": {
+        "ProjectName": "codebuild-beta"
+      },
       "End": true
     }
   }
