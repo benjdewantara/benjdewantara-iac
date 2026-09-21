@@ -1,3 +1,5 @@
+variable "arn_iam_role_parent" { type = string }
+variable "iam_role_name_codebuild_starter" { type = string }
 variable "projectname" { type = string }
 
 data "aws_caller_identity" "that" {}
@@ -41,8 +43,6 @@ resource "aws_iam_role_policy" "that1" {
           "Action" : [
             "logs:CreateLogGroup",
             "logs:CreateLogStream",
-            # "logs:DescribeLogGroups",
-            # "logs:DescribeLogStreams",
             "logs:PutLogEvents",
           ],
           "Resource" : "*"

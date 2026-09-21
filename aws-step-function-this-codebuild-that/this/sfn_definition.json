@@ -14,7 +14,7 @@
         "ProjectName": "codebuild-beta"
       },
       "Credentials": {
-        "RoleArn": "arn:aws:iam::931609664368:role/codebuild-beta"
+        "RoleArn": "${arn_iam_role_name_codebuild_starter}"
       },
       "End": true
     }

@@ -1,3 +1,4 @@
+variable "arn_iam_role_name_codebuild_starter" { type = string }
 variable "projectname" { type = string }
 
 resource "aws_iam_role" "this" {
@@ -63,13 +64,38 @@ resource "aws_iam_role_policy" "this2" {
   )
 }
 
-data "local_file" "this" {
-  filename = "${path.module}/sfn_definition.json"
+resource "aws_iam_role_policy" "this3" {
+  role = aws_iam_role.this.name
+  name = "STS-inline"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "STS",
+          "Effect" : "Allow",
+          "Action" : [
+            "sts:AssumeRole",
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
+
+data "template_file" "this" {
+  template = "${path.module}/sfn_definition.json"
+
+  vars = {
+    arn_iam_role_name_codebuild_starter = var.arn_iam_role_name_codebuild_starter
+  }
 }
 
 resource "aws_sfn_state_machine" "this" {
   name     = var.projectname
   role_arn = aws_iam_role.this.arn
 
-  definition = data.local_file.this.content
+  definition = data.template_file.this.rendered
 }
