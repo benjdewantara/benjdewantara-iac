@@ -5,13 +5,16 @@
     "HelloWorld": {
       "Type": "Pass",
       "Result": "Hello World 123!",
-      "Next": "CodeBuild StartBuild"
+      "Next": "StartBuild Customer Account"
     },
-    "CodeBuild StartBuild": {
+    "StartBuild Customer Account": {
       "Type": "Task",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Parameters": {
         "ProjectName": "codebuild-beta"
+      },
+      "Credentials": {
+        "RoleArn": "arn:aws:iam::931609664368:role/codebuild-beta"
       },
       "End": true
     }
