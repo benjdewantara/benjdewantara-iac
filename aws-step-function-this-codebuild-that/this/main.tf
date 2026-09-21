@@ -17,6 +17,28 @@ resource "aws_iam_role" "this" {
   })
 }
 
+resource "aws_iam_role_policy" "this" {
+  role = aws_iam_role.this.name
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "CloudWatch",
+          "Effect" : "Allow",
+          "Action" : [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
+
 data "local_file" "this" {
   filename = "${path.module}/sfn_definition.json"
 }
