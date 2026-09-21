@@ -10,9 +10,6 @@
     "StartBuild Customer Account": {
       "Type": "Task",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
-      "Parameters": {
-        "ProjectName": "codebuild-beta"
-      },
       "Credentials": {
         "RoleArn": "${arn_iam_role_name_codebuild_starter}"
       },
