@@ -17,7 +17,7 @@ resource "aws_iam_role" "this" {
   })
 }
 
-resource "aws_iam_role_policy" "this" {
+resource "aws_iam_role_policy" "this1" {
   role = aws_iam_role.this.name
   name = "CloudWatch-inline"
 
