@@ -19,7 +19,7 @@ resource "aws_iam_role" "this" {
 
 resource "aws_iam_role_policy" "this" {
   role = aws_iam_role.this.name
-  name = "${aws_iam_role.this.name}-CloudWatchLogs-inline"
+  name = "CloudWatch-inline"
 
   policy = jsonencode(
     {
