@@ -73,41 +73,41 @@ resource "aws_lambda_function" "this" {
   }
 }
 
-resource "aws_cloudwatch_event_bus" "this" {
-  name = var.projectname
-}
+# resource "aws_cloudwatch_event_bus" "this" {
+#   name = var.projectname
+# }
 
-resource "aws_cloudwatch_event_rule" "this" {
-  name = var.projectname
+# resource "aws_cloudwatch_event_rule" "this" {
+#   name = var.projectname
+#
+#   event_bus_name = aws_cloudwatch_event_bus.this.name
+#
+#   # event_pattern = jsonencode({
+#   #   "source" : ["aws.s3files"],
+#   #   "detail-type" : ["AWS API Call via CloudTrail"],
+#   #   "resources" : [
+#   #     "arn:aws:s3:::*",
+#   #   ],
+#   #   "detail" : {
+#   #     "eventSource" : ["s3files.amazonaws.com"]
+#   #   }
+#   # })
+#
+#   event_pattern = jsonencode({
+#     "source" : ["aws.s3"],
+#     "detail-type" : ["Object Created"]
+#   })
+#
+#   tags = {
+#     iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
+#   }
+# }
 
-  event_bus_name = aws_cloudwatch_event_bus.this.name
-
-  # event_pattern = jsonencode({
-  #   "source" : ["aws.s3files"],
-  #   "detail-type" : ["AWS API Call via CloudTrail"],
-  #   "resources" : [
-  #     "arn:aws:s3:::*",
-  #   ],
-  #   "detail" : {
-  #     "eventSource" : ["s3files.amazonaws.com"]
-  #   }
-  # })
-
-  event_pattern = jsonencode({
-    "source" : ["aws.s3"],
-    "detail-type" : ["Object Created"]
-  })
-
-  tags = {
-    iacpath = "lambda-s3-sns-eventbridge/lambda-eventBridge/main.tf"
-  }
-}
-
-resource "aws_cloudwatch_event_target" "this" {
-  arn            = aws_lambda_function.this.arn
-  rule           = aws_cloudwatch_event_rule.this.name
-  event_bus_name = aws_cloudwatch_event_rule.this.event_bus_name
-}
+# resource "aws_cloudwatch_event_target" "this" {
+#   arn            = aws_lambda_function.this.arn
+#   rule           = aws_cloudwatch_event_rule.this.name
+#   event_bus_name = aws_cloudwatch_event_rule.this.event_bus_name
+# }
 
 # resource "aws_lambda_permission" "this" {
 #   source_arn    = aws_cloudwatch_event_rule.this.arn
