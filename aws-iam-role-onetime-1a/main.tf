@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "this" {
           "Sid" : "S3",
           "Effect" : "Allow",
           "Action" : [
-            "codebuild:PutObject",
+            "s3:PutObject",
           ],
           "Resource" : "*"
         }
