@@ -7,7 +7,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "this" {
-  for_each = var.names_bucket
+  for_each = toset(var.names_bucket)
 
   bucket = each.value
 
