@@ -30,6 +30,10 @@ resource "aws_iam_role" "this" {
     ]
     }
   )
+
+  tags = {
+    iacpath = "aws-iam-role-onetime-1a/main.tf"
+  }
 }
 
 resource "aws_iam_role_policy" "this" {
