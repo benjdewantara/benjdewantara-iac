@@ -1,20 +1,27 @@
 {
+  "QueryLanguage": "JSONata",
   "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
   "StartAt": "HelloWorld",
   "States": {
     "HelloWorld": {
       "Type": "Pass",
-      "Result": "Hello World 123!",
-      "Next": "StartBuild Customer Account"
+      "Next": "ReadStepFunctionVariableExisting"
+    },
+    "ReadStepFunctionVariableExisting": {
+      "Type": "Pass",
+      "Next": "StartBuild Customer Account",
+      "Assign": {
+        "var1": "{% $states.input.text %}"
+      }
     },
     "StartBuild Customer Account": {
       "Type": "Task",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
-      "Parameters": {
+      "Arguments": {
         "ProjectName": "codebuild-beta"
       },
       "Credentials": {
-        "RoleArn": "${arn_iam_role_name_codebuild_starter}"
+        "RoleArn": "arn:aws:iam::931609664368:role/codebuild-beta-cb-starter"
       },
       "End": true
     }
