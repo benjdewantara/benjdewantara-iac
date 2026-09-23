@@ -15,6 +15,7 @@
     },
     "StartBuild Customer Account": {
       "Type": "Task",
+      "Next": "FinalizeOutput",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Arguments": {
         "ProjectName": "{% $states.input.CustomerProjectName %}"
@@ -26,7 +27,6 @@
     },
     "FinalizeOutput": {
       "Type": "Pass",
-      "Next": "ReadStepFunctionVariableExisting",
       "End": true
     }
   }
