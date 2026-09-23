@@ -1,6 +1,6 @@
 variable "aws_profile_this" { type = string }
 variable "aws_region" { type = string }
-variable "repository_names" { type = list(string) }
+variable "repository_names" { type = map(any) }
 
 provider "aws" {
   region  = var.aws_region
@@ -8,7 +8,7 @@ provider "aws" {
 }
 
 resource "aws_codecommit_repository" "this" {
-  for_each = toset(var.repository_names)
+  for_each = var.repository_names
 
   repository_name = each.value
 

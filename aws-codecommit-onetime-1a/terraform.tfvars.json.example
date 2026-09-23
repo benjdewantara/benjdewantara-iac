@@ -1,6 +1,7 @@
 {
   "aws_profile_this": "",
   "aws_region": "",
-  "repository_names": [
-  ]
+  "repository_names": {
+    "0": "sample-repo-name"
+  }
 }
