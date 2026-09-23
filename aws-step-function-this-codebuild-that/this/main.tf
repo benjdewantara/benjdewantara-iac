@@ -99,3 +99,14 @@ resource "aws_sfn_state_machine" "this" {
 
   definition = data.template_file.this.rendered
 }
+
+data "local_file" "this_sfn_b" {
+  filename = "${path.module}/sfn_definition-b.json"
+}
+
+resource "aws_sfn_state_machine" "this_sfn_b" {
+  name     = "${var.projectname}-b"
+  role_arn = aws_iam_role.this.arn
+
+  definition = data.local_file.this_sfn_b.content
+}

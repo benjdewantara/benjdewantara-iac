@@ -1,0 +1,33 @@
+{
+  "QueryLanguage": "JSONata",
+  "StartAt": "JustPassThis",
+  "States": {
+    "JustPassThis": {
+      "Type": "Pass",
+      "Next": "ReadStepFunctionVariableExisting"
+    },
+    "ReadStepFunctionVariableExisting": {
+      "Type": "Pass",
+      "Next": "StartBuild Customer Account",
+      "Assign": {
+        "var1": "{% $states.input.text %}"
+      }
+    },
+    "StartBuild Customer Account": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::codebuild:startBuild.sync",
+      "Arguments": {
+        "ProjectName": "{% $states.input.CustomerProjectName %}"
+      },
+      "Credentials": {
+        "RoleArn1": "arn:aws:iam::931609664368:role/codebuild-beta-cb-starter",
+        "RoleArn": "{% $states.input.CustomerCodeBuild %}"
+      }
+    },
+    "FinalizeOutput": {
+      "Type": "Pass",
+      "Next": "ReadStepFunctionVariableExisting",
+      "End": true
+    }
+  }
+}
