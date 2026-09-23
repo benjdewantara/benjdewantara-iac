@@ -21,7 +21,7 @@
         "ProjectName": "{% $states.input.CustomerProjectName %}"
       },
       "Credentials": {
-        "RoleArn": "{% $states.input.CustomerCodeBuild %}"
+        "RoleArn": "{% $states.input.CustomerCodeBuildRoleArn %}"
       }
     },
     "FinalizeOutput": {
