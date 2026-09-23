@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "6.36.0"
-    }
-  }
-}
 variable "aws_profile_this" { type = string }
 variable "aws_profile_that" { type = string }
 
