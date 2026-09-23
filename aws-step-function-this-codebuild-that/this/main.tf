@@ -105,8 +105,19 @@ data "local_file" "this_sfn_b" {
 }
 
 resource "aws_sfn_state_machine" "this_sfn_b" {
-  name     = "${var.projectname}-b"
+  name     = "${var.projectname}-b-JSONata-tryout"
   role_arn = aws_iam_role.this.arn
 
   definition = data.local_file.this_sfn_b.content
+}
+
+data "local_file" "this_sfn_c" {
+  filename = "${path.module}/sfn_definition-c.json"
+}
+
+resource "aws_sfn_state_machine" "this_sfn_c" {
+  name     = "${var.projectname}-c-S3-howto"
+  role_arn = aws_iam_role.this.arn
+
+  definition = data.local_file.this_sfn_c.content
 }
