@@ -21,7 +21,6 @@
         "ProjectName": "{% $states.input.CustomerProjectName %}"
       },
       "Credentials": {
-        "RoleArn1": "arn:aws:iam::931609664368:role/codebuild-beta-cb-starter",
         "RoleArn": "{% $states.input.CustomerCodeBuild %}"
       }
     },
