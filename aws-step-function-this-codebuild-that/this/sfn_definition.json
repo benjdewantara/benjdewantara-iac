@@ -18,7 +18,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Arguments": {
-        "ProjectName": "codebuild-beta"
+        "ProjectName": "{% $states.input.ProjectNameCustomer %}"
       },
       "Credentials": {
         "RoleArn": "arn:aws:iam::931609664368:role/codebuild-beta-cb-starter"
