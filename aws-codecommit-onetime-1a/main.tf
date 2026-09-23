@@ -1,6 +1,6 @@
 variable "aws_profile_this" { type = string }
 variable "aws_region" { type = string }
-variable "repository_names" { type = string }
+variable "repository_names" { type = list(string) }
 
 provider "aws" {
   region  = var.aws_region
