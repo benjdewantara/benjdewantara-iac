@@ -65,7 +65,6 @@ data "aws_ami" "al2023" {
   filter {
     name   = "name"
     values = ["al2023-ami-2023.*"]
-    # values = ["al2023-ami-minimal-2023.*"]
   }
 }
 
