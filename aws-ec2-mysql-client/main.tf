@@ -70,13 +70,10 @@ data "aws_ami" "al2023" {
 }
 
 resource "aws_instance" "this" {
-  ami           = data.aws_ami.al2023.id
-  instance_type = "t2.micro"
-
-  subnet_id = aws_subnet.this_private.id
-
-  # security_groups        = [aws_security_group.this.id]
-  # vpc_security_group_ids = [aws_security_group.this.id]
+  ami                         = data.aws_ami.al2023.id
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.this_private.id
+  associate_public_ip_address = true
 
   tags = {
     Name    = var.projectname
