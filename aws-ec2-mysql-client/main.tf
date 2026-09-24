@@ -86,6 +86,22 @@ resource "aws_route_table_association" "this_public" {
   subnet_id      = aws_subnet.this_public.id
 }
 
+resource "aws_security_group" "this_public" {
+  name   = "${var.projectname}-public"
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-mysql-client/main.tf"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "this_public" {
+  security_group_id = aws_security_group.this_public.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
