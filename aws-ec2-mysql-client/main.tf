@@ -122,12 +122,38 @@ data "aws_ami" "al2023" {
   }
 }
 
+data "local_file" "install_mysql_client" {
+  filename = "${path.module}/../scripts/mysql_client.sh"
+}
+
+locals {
+  timestamp_now = timestamp()
+}
+
+# this recreates resource random_string each time `terraform apply` occurs
+resource "random_string" "this" {
+  keepers = { marker = local.timestamp_now }
+
+  length    = 4
+  lower     = true
+  min_lower = 4
+  special   = false
+}
+
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.this_public.id
   vpc_security_group_ids      = [aws_security_group.this_public.id]
   associate_public_ip_address = true
+
+  user_data                   = data.local_file.install_mysql_client.content
+  user_data_replace_on_change = true
+
+  lifecycle {
+    create_before_destroy = true
+    replace_triggered_by  = [random_string.this] # this will always create a new EC2 instance
+  }
 
   tags = {
     Name    = var.projectname
