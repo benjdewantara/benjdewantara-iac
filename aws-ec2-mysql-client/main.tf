@@ -47,3 +47,39 @@ resource "aws_subnet" "this_private" {
     iacpath = "aws-ec2-mysql-client/main.tf"
   }
 }
+
+data "aws_ami" "al2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
+  }
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*"]
+    # values = ["al2023-ami-minimal-2023.*"]
+  }
+}
+
+resource "aws_instance" "this" {
+  ami           = data.aws_ami.al2023.id
+  instance_type = "t2.micro"
+
+  subnet_id = aws_subnet.this_private.id
+
+  # security_groups        = [aws_security_group.this.id]
+  # vpc_security_group_ids = [aws_security_group.this.id]
+
+  tags = {
+    Name    = var.projectname
+    iacpath = "aws-ec2-mysql-client/main.tf"
+  }
+}
