@@ -48,6 +48,16 @@ resource "aws_subnet" "this_private" {
   }
 }
 
+resource "aws_subnet" "this_public" {
+  vpc_id     = aws_vpc.this.id
+  cidr_block = local.cidr_subnet_4_1
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-mysql-client/main.tf"
+  }
+}
+
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -71,7 +81,7 @@ data "aws_ami" "al2023" {
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = "t2.micro"
-  subnet_id                   = aws_subnet.this_private.id
+  subnet_id                   = aws_subnet.this_public.id
   associate_public_ip_address = true
 
   tags = {
