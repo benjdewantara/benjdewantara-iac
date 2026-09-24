@@ -37,3 +37,13 @@ resource "aws_vpc" "this" {
     iacpath = "aws-ec2-mysql-client/main.tf"
   }
 }
+
+resource "aws_subnet" "this_private" {
+  vpc_id     = aws_vpc.this.id
+  cidr_block = local.cidr_subnet_4_0
+
+  tags = {
+    Name    = "${var.projectname}-private"
+    iacpath = "aws-ec2-mysql-client/main.tf"
+  }
+}
