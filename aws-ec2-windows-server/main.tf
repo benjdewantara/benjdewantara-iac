@@ -150,12 +150,17 @@ resource "random_string" "this" {
   special   = false
 }
 
+data "aws_key_pair" "this" {
+  key_name = "benj-keypair"
+}
+
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.winserver_base.id
   instance_type               = "t3.small"
   subnet_id                   = aws_subnet.this_public.id
   vpc_security_group_ids      = [aws_security_group.this_public.id]
   associate_public_ip_address = true
+  key_name                    = data.aws_key_pair.this.key_name
 
   # user_data                   = data.local_file.install_mysql_client.content
   user_data_replace_on_change = true
