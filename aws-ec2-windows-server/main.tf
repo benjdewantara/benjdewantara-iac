@@ -1,0 +1,172 @@
+variable "aws_profile_this" { type = string }
+variable "cidr_block" { type = string }
+variable "projectname" { type = string }
+
+provider "aws" {
+  profile = var.aws_profile_this
+  region  = "ap-southeast-1"
+}
+
+locals {
+  cidr_block_vpc = cidrsubnet(var.cidr_block, 0, 0)
+
+  cidr_subnet_4_0 = cidrsubnet(var.cidr_block, 1, 0)
+  cidr_subnet_4_1 = cidrsubnet(var.cidr_block, 1, 1)
+  # cidr_subnet_4_2 = cidrsubnet(var.cidr_block, 1, 2)
+  # cidr_subnet_4_3 = cidrsubnet(var.cidr_block, 1, 3)
+  # cidr_subnet_4_4 = cidrsubnet(var.cidr_block, 1, 4)
+}
+
+output "cidr_manual_division" {
+  value = {
+    cidr_block      = var.cidr_block,
+    cidr_block_vpc  = local.cidr_block_vpc,
+    cidr_subnet_4_0 = local.cidr_subnet_4_0,
+    cidr_subnet_4_1 = local.cidr_subnet_4_1,
+    # cidr_subnet_4_2 = local.cidr_subnet_4_2,
+    # cidr_subnet_4_3 = local.cidr_subnet_4_3,
+    # cidr_subnet_4_4 = local.cidr_subnet_4_4,
+  }
+}
+
+resource "aws_vpc" "this" {
+  cidr_block = local.cidr_block_vpc
+
+  tags = {
+    Name    = var.projectname
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_subnet" "this_private" {
+  vpc_id     = aws_vpc.this.id
+  cidr_block = local.cidr_subnet_4_0
+
+  tags = {
+    Name    = "${var.projectname}-private"
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_subnet" "this_public" {
+  vpc_id     = aws_vpc.this.id
+  cidr_block = local.cidr_subnet_4_1
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_route_table" "this_public" {
+  vpc_id = aws_vpc.this.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this.id
+  }
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_route_table_association" "this_public" {
+  route_table_id = aws_route_table.this_public.id
+  subnet_id      = aws_subnet.this_public.id
+}
+
+resource "aws_security_group" "this_public" {
+  name   = "${var.projectname}-public"
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name    = "${var.projectname}-public"
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "this_public" {
+  security_group_id = aws_security_group.this_public.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
+resource "aws_vpc_security_group_egress_rule" "this_public" {
+  security_group_id = aws_security_group.this_public.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
+data "aws_ami" "winserver_base" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "name"
+    values = ["Windows*English*Full*Base*"]
+  }
+
+  filter {
+    name   = "platform"
+    values = ["windows"]
+  }
+}
+
+output "a131" {
+  value = jsonencode(data.aws_ami.winserver_base)
+}
+
+# data "local_file" "install_mysql_client" {
+#   filename = "${path.module}/../scripts/mysql_client.sh"
+# }
+
+locals {
+  timestamp_now = timestamp()
+}
+
+# this recreates resource random_string each time `terraform apply` occurs
+resource "random_string" "this" {
+  keepers = { marker = local.timestamp_now }
+
+  length    = 4
+  lower     = true
+  min_lower = 4
+  special   = false
+}
+
+resource "aws_instance" "this" {
+  ami                         = data.aws_ami.winserver_base.id
+  instance_type               = "t3.small"
+  subnet_id                   = aws_subnet.this_public.id
+  vpc_security_group_ids      = [aws_security_group.this_public.id]
+  associate_public_ip_address = true
+
+  # user_data                   = data.local_file.install_mysql_client.content
+  user_data_replace_on_change = true
+
+  lifecycle {
+    create_before_destroy = true
+    replace_triggered_by  = [random_string.this] # this will always create a new EC2 instance
+  }
+
+  tags = {
+    Name    = var.projectname
+    iacpath = "aws-ec2-windows-server/main.tf"
+  }
+}
