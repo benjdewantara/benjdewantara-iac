@@ -1,3 +1,4 @@
+variable "ami_self_owned" { type = string }
 variable "aws_profile_this" { type = string }
 variable "cidr_block" { type = string }
 variable "projectname" { type = string }
@@ -154,9 +155,13 @@ data "aws_key_pair" "this" {
   key_name = "benj-keypair"
 }
 
+locals {
+  ami_chosen = length(var.ami_self_owned) > 0 ? var.ami_self_owned : data.aws_ami.winserver_base.id
+}
+
 resource "aws_instance" "this" {
-  ami                         = data.aws_ami.winserver_base.id
-  instance_type               = "t3.small"
+  ami                         = local.ami_chosen
+  instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.this_public.id
   vpc_security_group_ids      = [aws_security_group.this_public.id]
   associate_public_ip_address = true
