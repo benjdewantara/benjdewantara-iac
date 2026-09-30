@@ -166,6 +166,7 @@ resource "aws_instance" "this" {
   vpc_security_group_ids      = [aws_security_group.this_public.id]
   associate_public_ip_address = true
   key_name                    = data.aws_key_pair.this.key_name
+  iam_instance_profile        = aws_iam_role.this.name
 
   # user_data                   = data.local_file.install_mysql_client.content
   user_data_replace_on_change = true
