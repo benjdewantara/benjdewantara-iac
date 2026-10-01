@@ -8,6 +8,8 @@ provider "aws" {
   region  = "ap-southeast-1"
 }
 
+# data "aws_caller_identity" "this" {}
+
 locals {
   cidr_block_vpc = cidrsubnet(var.cidr_block, 0, 0)
 
