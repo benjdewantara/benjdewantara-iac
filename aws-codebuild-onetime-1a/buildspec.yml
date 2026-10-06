@@ -6,7 +6,24 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "Will check chrome existence"
-      - find / -type f -iregex '.*chrome.*'
-      - echo "Will check chromium existence"
-      - find / -type f -iregex '.*chromium.*'
+      - echo "Before uninstalling"
+      - google-chrome --version
+      - chromium --version
+      - chromium-browser --version
+      - chromedriver --version
+      - for d in $(echo $PATH | sed -E -e ' s/:/ /g '); do find $d -maxdepth 1 -iregex '.*chrom.*'; done;
+#      - apt remove -y google-chrome-stable
+#      - apt list --installed
+#      - dpkg -l
+#      - dpkg --purge -a
+#      - dpkg --purge --pending
+      - dpkg --purge google-chrome-stable
+      - dpkg -l
+      - for d in $(echo $PATH | sed -E -e ' s/:/ /g '); do find $d -maxdepth 1 -iregex '.*chrom.*'; done;
+      - dpkg --purge chromium
+      - dpkg --purge chromedriver
+      - dpkg -l
+#      - echo "Will check chrome existence"
+#      - find / -type f -iregex '.*chrome.*'
+#      - echo "Will check chromium existence"
+#      - find / -type f -iregex '.*chromium.*'
