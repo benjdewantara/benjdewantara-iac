@@ -36,41 +36,39 @@ resource "aws_iam_role" "this" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "this_AWSCodeBuildAdminAccess" {
-  policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
-  role       = aws_iam_role.this.name
-}
-
-resource "aws_iam_role_policy_attachment" "this_AdministratorAccess" {
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  role       = aws_iam_role.this.name
-}
-
-# resource "aws_iam_role_policy" "this_AllowCloudWatchLogs" {
-#   role = aws_iam_role.this.name
-#   name = "AllowCloudWatchLogs"
-#
-#   policy = jsonencode(
-#     {
-#       "Version" : "2012-10-17",
-#       "Statement" : [
-#         {
-#           "Sid" : "AllowCloudWatchLogs",
-#           "Effect" : "Allow",
-#           "Action" : [
-#             "*",
-#             "logs:CreateLogStream",
-#             "logs:DescribeLogGroups",
-#             "logs:DescribeLogStreams",
-#             "logs:PutLogEvents",
-#             "secretsmanager:GetSecretValue",
-#           ],
-#           "Resource" : "*"
-#         }
-#       ]
-#     }
-#   )
+# resource "aws_iam_role_policy_attachment" "this_AWSCodeBuildAdminAccess" {
+#   policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
+#   role       = aws_iam_role.this.name
 # }
+#
+# resource "aws_iam_role_policy_attachment" "this_AdministratorAccess" {
+#   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+#   role       = aws_iam_role.this.name
+# }
+
+resource "aws_iam_role_policy" "this_AllowCloudWatchLogs" {
+  role = aws_iam_role.this.name
+  name = "AllowCloudWatchLogs"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "AllowCloudWatchLogs",
+          "Effect" : "Allow",
+          "Action" : [
+            "logs:CreateLogStream",
+            "logs:DescribeLogGroups",
+            "logs:DescribeLogStreams",
+            "logs:PutLogEvents",
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
 
 data "template_file" "that" {
   template = file("./buildspec.yml")
