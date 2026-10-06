@@ -11,7 +11,7 @@ locals {
 }
 
 resource "aws_iam_role" "this" {
-  name = var.projectname
+  name = "${var.projectname}-cb"
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -22,9 +22,9 @@ resource "aws_iam_role" "this" {
           "sts:AssumeRole"
         ],
         "Principal" : {
-          "AWS" : [
-            data.aws_caller_identity.this.account_id
-          ],
+          "Service" : [
+            "codebuild.amazonaws.com"
+          ]
         }
       }
     ]
