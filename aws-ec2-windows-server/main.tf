@@ -157,6 +157,10 @@ data "aws_key_pair" "this" {
   key_name = "benj-keypair"
 }
 
+data "local_file" "hello_world" {
+  filename = "${path.module}/../scripts/hello_world.ps1"
+}
+
 locals {
   ami_chosen = length(var.ami_self_owned) > 0 ? var.ami_self_owned : data.aws_ami.winserver_base.id
 }
@@ -170,7 +174,12 @@ resource "aws_instance" "this" {
   key_name                    = data.aws_key_pair.this.key_name
   iam_instance_profile        = aws_iam_role.this.name
 
-  # user_data                   = data.local_file.install_mysql_client.content
+  user_data                   = <<EOF
+<powershell>
+${data.local_file.hello_world.content}
+</powershell>
+<persist>true</persist>
+  EOF
   user_data_replace_on_change = true
 
   lifecycle {
