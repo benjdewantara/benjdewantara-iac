@@ -6,11 +6,6 @@ provider "aws" {
   profile = var.aws_profile_this
 }
 
-resource "aws_sns_topic" "this" {
-  display_name = "${var.projectname}-display_name"
-  name         = "${var.projectname}-name"
-}
-
 resource "aws_iam_role" "this" {
   name = "${var.projectname}-lmd"
 
@@ -33,15 +28,14 @@ resource "aws_iam_role" "this" {
 }
 
 resource "local_file" "this" {
-  filename = "index.mjs"
+  filename = "script-temp/index.mjs"
   content  = file("${path.module}/../scripts/lambda-print.js")
 }
 
 resource "archive_file" "this" {
   type        = "zip"
-  source_file = "index.mjs"
-  output_path = "index.zip"
-  # source_content_filename = "index.mjs"
+  source_dir  = "./script-temp"
+  output_path = "${local_file.this.content_md5}.tmp"
 }
 
 resource "aws_lambda_function" "this" {
@@ -51,4 +45,22 @@ resource "aws_lambda_function" "this" {
   filename      = archive_file.this.output_path
   handler       = "index.handler"
   package_type  = "Zip"
+}
+
+resource "aws_sns_topic" "this" {
+  display_name = "${var.projectname}-display_name"
+  name         = "${var.projectname}-name"
+}
+
+resource "aws_sns_topic_subscription" "this" {
+  endpoint  = aws_lambda_function.this.arn
+  protocol  = "lambda"
+  topic_arn = aws_sns_topic.this.arn
+}
+
+resource "aws_lambda_permission" "this" {
+  source_arn    = aws_sns_topic.this.arn
+  function_name = aws_lambda_function.this.function_name
+  action        = "lambda:InvokeFunction"
+  principal     = "sns.amazonaws.com"
 }
