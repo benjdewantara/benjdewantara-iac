@@ -6,27 +6,6 @@ provider "aws" {
   profile = var.aws_profile_this
 }
 
-resource "aws_iam_role" "this" {
-  name = "${var.projectname}-lmd"
-
-  assume_role_policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "sts:AssumeRole"
-        ],
-        "Principal" : {
-          "Service" : [
-            "lambda.amazonaws.com"
-          ]
-        }
-      }
-    ]
-  })
-}
-
 resource "local_file" "this" {
   filename = "script-temp/index.mjs"
   content  = file("${path.module}/../scripts/lambda-print.js")
