@@ -27,8 +27,9 @@ resource "aws_lambda_function" "this" {
 }
 
 resource "aws_sns_topic" "this" {
-  display_name = "${var.projectname}-display_name"
-  name         = "${var.projectname}-name"
+  display_name      = "${var.projectname}-display_name"
+  name              = "${var.projectname}-name"
+  signature_version = 1
 }
 
 resource "aws_sns_topic_subscription" "this" {
