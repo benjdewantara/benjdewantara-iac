@@ -17,7 +17,7 @@ resource "aws_iam_policy" "this" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "AllowCloudWatchAgentConfigurerWizard",
+          "Sid" : "AllowFederationTokenToSignExternalUsers",
           "Effect" : "Allow",
           "Action" : [
             "sts:GetFederationToken",
@@ -33,4 +33,13 @@ resource "aws_iam_policy_attachment" "this" {
   name       = var.projectname
   policy_arn = aws_iam_policy.this.arn
   users      = [aws_iam_user.this.name]
+}
+
+resource "aws_iam_access_key" "this" {
+  user = aws_iam_user.this.name
+}
+
+resource "local_file" "this_aws_iam_access_key" {
+  filename = "./this_aws_iam_access_key.json"
+  content  = jsonencode(aws_iam_access_key.this)
 }
